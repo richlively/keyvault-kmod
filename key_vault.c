@@ -7,7 +7,7 @@
 #include "key_vault.h"
 
 /* the key vault:  once globally available, but now specified by a parameter */
-// static struct key_vault v; poooooooooooooooooooooooop
+// static struct key_vault v; 
 
 /* init_vault:  initializes the key vault */
 int  init_vault (struct key_vault *v, int size) {
