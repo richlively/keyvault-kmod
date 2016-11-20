@@ -1,0 +1,7 @@
+- How many devices should be loaded?
+- When there are concurrent users, do they use the same device or each have their own seperate device? Does it depend on the application program?
+- Each device is its own seperate copy of the module, right?
+- Do we need a file pointer outside of the key-vault structure? i.e. a file pointer that is part of our kv_mod_dev struct?
+- Only write the functions that we need plus any additional helper functions, right?
+- How can we work on this off-campus over thanksgiving break? 
+- Some of the test programs open /dev/kv_mod0 and others open /dev/kv_mod. What is with the incosistency?

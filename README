@@ -1,0 +1,29 @@
+The scull code in LDD3 is too old to run on modern linux kernels.  However the
+authors have managed to keep the code updated on GitHub at:
+  https://github.com/martinezjavier/ldd3.
+
+I downloaded the entire source repository as a zip, unzipped it on john.  Then
+I logged onto my LFS machine and used sftp (which I had installed earlier) to
+move the first of the scull examples (the one from Chapter 3) to the LFS
+machine.
+
+To make the scull source more easiy understood, I removed references to the
+additional devices (e.g., scullpipe, sculla, etc.) and also thoroughly
+commented the code and improved the formatting.
+
+In order to make the kernel module, I simpified the Makefile to be more like
+the one from the hello world example.  This may not have been necessary, but
+it was successful.
+
+The LLD text suggested that we could "see" what's happening in the execution
+of the scull module using strace.  The ordinary LFS installation does not
+include strace, but it can be found at:  
+  http://igor-zivkovic.from.hr/BLFS/general/strace.html.
+
+Finally, I also found a program online from course at Florida State University
+on writing device drivers that tested scull.  That web location is:
+  http://www.cs.uni.edu/~diesburg/courses/dd/code.html.
+
+What now remains is a simplified version of scull which should be modified
+to implement HW4.
+
