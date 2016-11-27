@@ -49,6 +49,109 @@ MODULE_LICENSE("Dual BSD/GPL");
 /* the set of devices allocated in kv_mod_init_module */
 struct kv_mod_dev *kv_mod_devices = NULL;
 
+
+/*
+ * Release the memory held by the kv_mod device; must be called with the device
+ * semaphore held.  Requires that dev not be NULL
+ */
+int kv_mod_trim(struct kv_mod_dev *dev) {
+    //TODO: stub
+    return 0;
+}
+
+
+/*
+ * Release the memory held by the kv_mod device; must be called with the device
+ * semaphore held.  Requires that dev not be NULL
+ */
+/*
+int kv_mod_trim(struct kv_mod_dev *dev) {
+	close_vault(dev->data);
+	dev->data = NULL;
+
+	return 0;
+}
+*/
+
+/*
+ * Open: to open the device is to initialize it for the remaining methods.
+ */
+int kv_mod_open(struct inode *inode, struct file *filp) {
+    //TODO: stub
+    struct kv_mod_dev *dev;
+    dev = container_of(inode->i_cdev, struct kv_mod_dev, cdev);
+    filp->private_data = dev;
+
+    //here we need to decide if we set fp to null or the first
+    //key needed
+    if (dev->data->ukey_data->num_keys == 0) 
+    if (dev->data->ukey_data->num_keys == 0) {
+       dev->data->ukey_data->fp = NULL;
+    } else {
+        //dev->data->ukey_data->fp = dev->data->ukey_data->(data[keys]?)
+    }
+
+    //I don't think we're supposed to trim 
+    //because that clears the memory, but I'm not sure
+    //what we're supposed to do instead
+    //we may be able to just not include that code in ours
+	return 0;
+}
+
+/*
+ * Release: release is the opposite of open, so it deallocates any
+ *          memory allocated by kv_mod_open and shuts down the device.
+ *          since open didn't allocate anything and our device exists
+ *          only in memory, there are no actions to take here.
+ */
+int kv_mod_release(struct inode *inode, struct file *filp) {
+    //what do we use the inode for?
+    close_vault(filp->private_data);
+	return 0;
+}
+
+/*
+ * Read: implements the read action on the device by reading count
+ *       bytes into buf beginning at file position f_pos from the file 
+ *       referenced by filp.  The attribute "__user" is a gcc extension
+ *       that indicates that buf originates from user space memory and
+ *       should therefore not be trusted.
+ */
+
+ssize_t kv_mod_read(struct file *filp, char __user *buf, size_t count,
+                    loff_t *f_pos) {
+    //TODO: stub
+    return 0;
+}
+
+ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
+                     loff_t *f_pos) {
+    //TODO: stub
+    struct scull_dev *dev = filp->private_data;
+    
+    //get the semaphore
+    if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
+
+    //where are we inserting?
+    kv_list *current = dev->data->ukey_data->fp;
+    kv_vault *vault = dev->data;
+    find_key(vault, /*uid?*/, current, /*what*/);
+    return 0;
+}
+
+long kv_mod_ioctl(struct file *filp, unsigned int cmd, unsigned long arg) {
+    //TODO: stub
+    return 0;
+}
+
+/*
+ * Seek:  the only one of the "extended" operations which kv_mod implements.
+ */
+loff_t kv_mod_llseek(struct file *filp, loff_t off, int whence) {
+    //TODO: stub
+    return 0;
+}
+
 /* this assignment is what "binds" the template file operations with those that
  * are implemented herein.
  */
@@ -61,6 +164,35 @@ struct file_operations kv_mod_fops = {
 	.open =     kv_mod_open,
 	.release =  kv_mod_release,
 };
+
+/*
+ * The cleanup function is used to handle initialization failures as well.
+ * Thefore, it must be careful to work correctly even if some of the items
+ * have not been initialized
+ */
+void kv_mod_cleanup_module(void) {
+    dev_t devno = MKDEV(kv_mod_major, kv_mod_minor);
+
+	/* if the devices were succesfully allocated, then the referencing pointer
+    * will be non-NULL.
+    */
+	if (kv_mod_devices != NULL) {
+
+	   /* Get rid of our char dev entries by first deallocating memory and then
+       * deleting them from the kernel */
+	   int i;
+		for (i = 0; i < kv_mod_nr_devs; i++) {
+			kv_mod_trim(kv_mod_devices + i);
+			cdev_del(&kv_mod_devices[i].cdev);
+		}
+
+		/* free the referencing structures */
+		kfree(kv_mod_devices);
+	}
+
+    unregister_chrdev_region(devno, kv_mod_nr_devs);
+}
+
 
 /*
 * Set up the char_dev structure for this device.
@@ -78,41 +210,13 @@ static void kv_mod_setup_cdev(struct kv_mod_dev *dev, int index) {
   if (err) printk(KERN_NOTICE "Error %d adding kv_mod%d", err, index);
 }
 
-/*
- * Release the memory held by the kv_mod device; must be called with the device
- * semaphore held.  Requires that dev not be NULL
- */
-/*
-int kv_mod_trim(struct kv_mod_dev *dev) {
-	close_vault(dev->data);
-	dev->data = NULL;
-
-	return 0;
-}
-*/
-
-/*
- * Release: release is the opposite of open, so it deallocates any
- *          memory allocated by kv_mod_open and shuts down the device.
- *          since open didn't allocate anything and our device exists
- *          only in memory, there are no actions to take here.
- */
-int kv_mod_release(struct inode *inode, struct file *filp) {
-	return 0;
-}
-
-
-
 int kv_mod_init_module(void) {
-	int result, i;
-	dev_t dev = 0;
+    //TODO: stub
+    int result, i;
+    dev_t dev = 0;
 
-   /*
-    * Compile-time default for major is zero (dynamically assigned) unless 
-    * directed otherwise at load time.  Also get range of minors to work with.
-    */
-	if (kv_mod_major == 0) {
-		result      = alloc_chrdev_region(&dev,kv_mod_minor,kv_mod_nr_devs,"kv");
+    if (kv_mod_major == 0) {
+		result      = alloc_chrdev_region(&dev,kv_mod_minor,kv_mod_nr_devs,"kv_mod");
 		kv_mod_major = MAJOR(dev);
 	} else {
 		dev    = MKDEV(kv_mod_major, kv_mod_minor);
@@ -125,47 +229,15 @@ int kv_mod_init_module(void) {
 		return result;
 	}
 
-   /* 
-	 * allocate the devices -- we can't have them static, as the number
-	 * can be specified at load time
-	 */
-	kv_mod_devices = kmalloc(kv_mod_nr_devs*sizeof(struct kv_mod_dev), GFP_KERNEL);
-
-	/* exit if memory allocation fails */
-	if (!kv_mod_devices) {
-		result = -ENOMEM;
-		goto fail;
-	}
-
-	/* otherwise, zero the memory */
-	memset(kv_mod_devices, 0, kv_mod_nr_devs * sizeof(struct kv_mod_dev));
-
-   /* Initialize each device. */
-	for (i = 0; i < kv_mod_nr_devs; i++) {
-		init_vault(kv_mod_devices[i].data, MAX_KEY_USER);
-
-		sema_init(&kv_mod_devices[i].sem, 1);
-		kv_mod_setup_cdev(&kv_mod_devices[i], i);
-	}
- 
-   /* succeed */
-	return 0;
-
-	/* failure, so cleanup is necessary */
-  fail:
-	kv_mod_cleanup_module();
-	return result;
+    //we're initializing the devices, but I'm not sure if we need to initialize
+    //all four or whatever
+    int size = sizeof(kv_mod_devices)/sizeof(kv_mod_devices[0]);
+    for (i = 0; i < size; i++) init_vault((kv_mod_devices[i].data), 1); //maybe?
+    return 0;
 }
 
 
 
-/*
- * The cleanup function is used to handle initialization failures as well.
- * Thefore, it must be careful to work correctly even if some of the items
- * have not been initialized
- */
-void kv_mod_cleanup_module(void) {
-}
 
 /* identify to the kernel the entry points for initialization and release, these
  * functions are called on insmod and rmmod, respectively

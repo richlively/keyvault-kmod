@@ -1,7 +1,21 @@
 - How many devices should be loaded?
+A: you can get away with just one device
 - When there are concurrent users, do they use the same device or each have their own seperate device? Does it depend on the application program?
+A: all users hit the same device
 - Each device is its own seperate copy of the module, right?
 - Do we need a file pointer outside of the key-vault structure? i.e. a file pointer that is part of our kv_mod_dev struct?
+A: already in key-vault
+char* seek_key should be in key vault but since it isn't making it global would be easier for this time around
 - Only write the functions that we need plus any additional helper functions, right?
-- How can we work on this off-campus over thanksgiving break? 
+- How can we work on this off-campus over thanksgiving break?
+A:  1 - can run a VM on personal laptop and do work from there
+            in S drive in CS3610 look in licenses.txt
+    2 - use selfservice to connect to john then ssh into LFS machine
 - Some of the test programs open /dev/kv_mod0 and others open /dev/kv_mod. What is with the incosistency?
+A: just call it kv_mod in test files
+
+Dr. Shomper's cell: 937-269-1099
+
+- do I need scull_follow and other helper functions? I would think key_vault would take care of this
+- I already have a linux partition on my laptop. Would it be better to switch to VM if I only will use Linux for coding?
+- is ctrl+z the best way to 'pause' vim to check on console?

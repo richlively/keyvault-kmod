@@ -85,7 +85,7 @@ int insert_pair (struct key_vault *v, int uid, char *key, char *val);
 void delete_pair (struct key_vault *v, int uid, char *key, char *val);
 
 /* retrieve_val:  retrieves val(s) for key for uid (one-indexed) for debugging*/
-int retrieve_val (struct key_vault *v, int uid, char *key, 
+ int retrieve_val (struct key_vault *v, int uid, char *key, 
 						char  val[MAX_KEY_USER][MAX_VAL_SIZE]);
 
 /* find_key:  finds the specified key in the vault and returns a pointer to
