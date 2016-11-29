@@ -51,29 +51,16 @@ MODULE_LICENSE("Dual BSD/GPL");
 /* the set of devices allocated in kv_mod_init_module */
 struct kv_mod_dev *kv_mod_devices = NULL;
 
-
 /*
  * Release the memory held by the kv_mod device; must be called with the device
  * semaphore held.  Requires that dev not be NULL
  */
-int kv_mod_trim(struct kv_mod_dev *dev) {
-    //TODO: stub
-    return 0;
-}
-
-
-/*
- * Release the memory held by the kv_mod device; must be called with the device
- * semaphore held.  Requires that dev not be NULL
- */
-/*
 int kv_mod_trim(struct kv_mod_dev *dev) {
 	close_vault(dev->data);
 	dev->data = NULL;
 
 	return 0;
 }
-*/
 
 /*
  * Open: to open the device is to initialize it for the remaining methods.
@@ -81,8 +68,20 @@ int kv_mod_trim(struct kv_mod_dev *dev) {
 int kv_mod_open(struct inode *inode, struct file *filp) {
     //TODO: stub
     struct kv_mod_dev *dev;
+    /* we need the scull_dev object (dev), but the required prototpye
+      for the open method is that it receives a pointer to an inode.
+      now an inode contains a struct cdev (the field is called
+      i_cdev) and we can use this field with the container_of macro
+      to obtain the scull_dev object (since scull_dev also contains
+      a cdev object.
+    */
     dev = container_of(inode->i_cdev, struct kv_mod_dev, cdev);
+    /* so that we don't need to use the container_of() macro repeatedly,
+		we save the handle to dev in the file's private_data for other methods.
+	 */
     filp->private_data = dev;
+
+    //TODO: finish open setup
 
     //here we need to decide if we set fp to null or the first
     //key needed
@@ -106,9 +105,8 @@ int kv_mod_open(struct inode *inode, struct file *filp) {
  *          only in memory, there are no actions to take here.
  */
 int kv_mod_release(struct inode *inode, struct file *filp) {
-    //what do we use the inode for?
-    close_vault(filp->private_data);
-	return 0;
+	//Nothing to release; stub
+    return 0;
 }
 
 /*
@@ -212,9 +210,13 @@ static void kv_mod_setup_cdev(struct kv_mod_dev *dev, int index) {
 }
 
 int kv_mod_init_module(void) {
-    //TODO: stub
     int result, i;
     dev_t dev = 0;
+
+    /*
+    * Compile-time default for major is zero (dynamically assigned) unless 
+    * directed otherwise at load time.  Also get range of minors to work with.
+    */
 
     if (kv_mod_major == 0) {
 		result      = alloc_chrdev_region(&dev,kv_mod_minor,kv_mod_nr_devs,"kv_mod");
@@ -230,11 +232,31 @@ int kv_mod_init_module(void) {
 		return result;
 	}
 
-    //we're initializing the devices, but I'm not sure if we need to initialize
-    //all four or whatever
-    int size = sizeof(kv_mod_devices)/sizeof(kv_mod_devices[0]);
-    for (i = 0; i < size; i++) init_vault((kv_mod_devices[i].data), 1); //maybe?
-    return 0;
+    /* 
+	 * allocate the devices -- we can't have them static, as the number
+	 * can be specified at load time
+	 */
+	kv_mod_devices = kmalloc(kv_mod_nr_devs*sizeof(struct kv_mod_dev), GFP_KERNEL);
+
+	/* exit if memory allocation fails */
+	if (!kv_mod_devices) {
+		result = -ENOMEM;
+        kv_mod_cleanup_module();
+        return result;
+	}
+
+	/* otherwise, zero the memory */
+	memset(kv_mod_devices, 0, kv_mod_nr_devs * sizeof(struct kv_mod_dev));
+   /* Initialize each device. */
+	for (i = 0; i < kv_mod_nr_devs; i++) {
+        //TODO: is this the right size to pass in? Should we check for errors?
+        init_vault(kv_mod_devices[i].data, MAX_KEY_USER);
+		sema_init(&kv_mod_devices[i].sem, 1);
+		kv_mod_setup_cdev(&kv_mod_devices[i], i);
+	}
+
+      /* succeed */
+	return 0;
 }
 
 
