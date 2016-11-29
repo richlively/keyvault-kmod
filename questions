@@ -19,3 +19,8 @@ Dr. Shomper's cell: 937-269-1099
 - do I need scull_follow and other helper functions? I would think key_vault would take care of this
 - I already have a linux partition on my laptop. Would it be better to switch to VM if I only will use Linux for coding?
 - is ctrl+z the best way to 'pause' vim to check on console?
+
+
+
+- does the key vault take care of expanding internally? i.e. I initialize a key vault that can support 5 users but end up needing a key vault that can support 8 users?
+- undefined key vault functions?
