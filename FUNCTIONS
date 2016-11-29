@@ -1,0 +1,7 @@
+Completed:
+init_module
+cleanup_module
+trim
+release
+TODO:
+open - mostly done, but need to check TODO comments for things to do; also, key_vault functions aren't linking properly

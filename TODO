@@ -1,0 +1,15 @@
+Completed:
+- Modify file names
+- Modify Makefile to build with new filenames
+- Modify kv_mod_load and kv_mod_unload to work with new device names
+- Current implementation does not seem to work with append (non-issue in
+  kv_mod device, which will not over-write data structure on write).
+- Modify the .h and .c files to replace references to "scull" with "kv_mod"
+TODO:
+- Strip out qset data structure
+- Install new key_vault structure
+- Modify key_vault by replacing C library functions w/kernel counterparts
+- Modify read, write(), etc. to work with new structures
+- Modify ioctl #defines
+- Implement ioctls
+- Test
