@@ -129,6 +129,7 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
                      loff_t *f_pos) {
     //TODO: stub
     struct kv_mod_dev *dev = filp->private_data;
+	struct kv_list *list;
     
     //get the semaphore
     if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
@@ -136,8 +137,32 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
     //where are we inserting?
     struct kv_list *curr = dev->data->ukey_data->fp;
     struct kv_vault *vault = dev->data;
-    //find_key(vault, /*uid?*/, curr, /*what*/);
+	
+	//here we get the index of the key, and the user id
+	//find the key then check if it's NULL or not
+	int keynum;
+	int idnum = get_user_id();
+	fix_uid(&idnum);
+    list = find_key(vault, idnum, curr, &keynum);
+	
+	if (list == NULL) goto out;
+	if (! list->data) {
+		list->data = kmalloc(kv_list * sizeof(char *), GFP_KERNEL);
+		if (! dptr->data) goto out;
+		
+		memset(list->data, 0, kv_list * sizeof(char *));
+	}
+	
+	if (count > 
+	
+	
+	
     return 0;
+}
+
+void fix_uid(int &id) {
+	if (id == 0) id = 1;
+	else id -= 998;
 }
 
 long kv_mod_ioctl(struct file *filp, unsigned int cmd, unsigned long arg) {
