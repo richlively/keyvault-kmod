@@ -27,6 +27,8 @@
 #include <linux/fcntl.h>	/* O_ACCMODE */
 #include <linux/seq_file.h>
 #include <linux/cdev.h>
+#include <linux/sched.h>
+#include <linux/cred.h>
 
 #include <asm/uaccess.h>	/* copy_*_user */
 
@@ -84,7 +86,6 @@ int kv_mod_open(struct inode *inode, struct file *filp) {
 
     //here we need to decide if we set fp to null or the first
     //key needed
-    if (dev->data->ukey_data->num_keys == 0) 
     if (dev->data->ukey_data->num_keys == 0) {
        dev->data->ukey_data->fp = NULL;
     } else {
@@ -127,15 +128,15 @@ ssize_t kv_mod_read(struct file *filp, char __user *buf, size_t count,
 ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
                      loff_t *f_pos) {
     //TODO: stub
-    struct scull_dev *dev = filp->private_data;
+    struct kv_mod_dev *dev = filp->private_data;
     
     //get the semaphore
     if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
 
     //where are we inserting?
-    kv_list *current = dev->data->ukey_data->fp;
-    kv_vault *vault = dev->data;
-    find_key(vault, /*uid?*/, current, /*what*/);
+    struct kv_list *curr = dev->data->ukey_data->fp;
+    struct kv_vault *vault = dev->data;
+    //find_key(vault, /*uid?*/, curr, /*what*/);
     return 0;
 }
 
