@@ -47,7 +47,7 @@
 #endif
 
 #ifndef KV_MOD_NR_DEVS
-#define KV_MOD_NR_DEVS 4    /* kv_mod0 through kv_mod3 */
+#define KV_MOD_NR_DEVS 1    /* kv_mod0 through kv_mod3 */
 #endif
 
 struct kv_mod_dev {

@@ -22,5 +22,4 @@ Dr. Shomper's cell: 937-269-1099
 
 
 
-- does the key vault take care of expanding internally? i.e. I initialize a key vault that can support 5 users but end up needing a key vault that can support 8 users?
 - undefined key vault functions?

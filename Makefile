@@ -1,9 +1,9 @@
 ifneq ($(KERNELRELEASE),)
 # call from kernel build system
 
-kv-objs := kv_mod.c
+kvmod-objs := kv_mod.o key_vault.o
 
-obj-m	:= kv_mod.o
+obj-m	:= kvmod.o
 
 else
 

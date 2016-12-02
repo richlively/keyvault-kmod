@@ -44,6 +44,10 @@ int kv_mod_nr_devs = KV_MOD_NR_DEVS;
 module_param(kv_mod_major,   int, S_IRUGO);
 module_param(kv_mod_minor,   int, S_IRUGO);
 module_param(kv_mod_nr_devs, int, S_IRUGO);
+void fix_uid(int *idnum);
+void insert(struct kv_list **data, const char __user *buf);
+int get_user_id(void);
+
 
 MODULE_AUTHOR("Alessandro Rubini, Jonathan Corbet modified K. Shomper and further modified by Rich Lively and Tim Froberg");
 MODULE_LICENSE("Dual BSD/GPL");
@@ -55,8 +59,9 @@ struct kv_mod_dev *kv_mod_devices = NULL;
  * Release the memory held by the kv_mod device; must be called with the device
  * semaphore held.  Requires that dev not be NULL
  */
-int kv_mod_trim(struct kv_mod_dev *dev) {
-	close_vault(dev->data);
+int remove_data(struct kv_mod_dev *dev) {
+	//TODO: hold semaphore?
+    close_vault(dev->data);
 	dev->data = NULL;
 
 	return 0;
@@ -66,7 +71,6 @@ int kv_mod_trim(struct kv_mod_dev *dev) {
  * Open: to open the device is to initialize it for the remaining methods.
  */
 int kv_mod_open(struct inode *inode, struct file *filp) {
-    //TODO: stub
     struct kv_mod_dev *dev;
     /* we need the scull_dev object (dev), but the required prototpye
       for the open method is that it receives a pointer to an inode.
@@ -75,6 +79,7 @@ int kv_mod_open(struct inode *inode, struct file *filp) {
       to obtain the scull_dev object (since scull_dev also contains
       a cdev object.
     */
+    printk(KERN_WARNING "starting open\n");
     dev = container_of(inode->i_cdev, struct kv_mod_dev, cdev);
     /* so that we don't need to use the container_of() macro repeatedly,
 		we save the handle to dev in the file's private_data for other methods.
@@ -85,16 +90,15 @@ int kv_mod_open(struct inode *inode, struct file *filp) {
 
     //here we need to decide if we set fp to null or the first
     //key needed
-    if (dev->data->ukey_data->num_keys == 0) {
-       dev->data->ukey_data->fp = NULL;
+    int uid = get_user_id();
+    if (num_keys(dev->data, uid) == 0 ) {
+        dev->data->ukey_data[uid].fp = NULL;
     } else {
-        //dev->data->ukey_data->fp = dev->data->ukey_data->(data[keys]?)
+        //TODO: test if this is right
+        //set the file pointer to the first key value pair in the user's key vault
+        dev->data->ukey_data[uid].fp = dev->data->ukey_data[uid].data[0];
     }
-
-    //I don't think we're supposed to trim 
-    //because that clears the memory, but I'm not sure
-    //what we're supposed to do instead
-    //we may be able to just not include that code in ours
+    printk(KERN_WARNING "finished open\n");
 	return 0;
 }
 
@@ -127,41 +131,65 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
                      loff_t *f_pos) {
     //TODO: stub
     struct kv_mod_dev *dev = filp->private_data;
-	struct kv_list *list;
+    ssize_t retval = -ENOMEM;
+   
     
+    struct key_vault *vault = dev->data;
+    struct kv_list *curr = vault->ukey_data->fp;
+    int *keynum;
+	int idnum = get_user_id();
+    char* key = curr->kv.key;
+
     //get the semaphore
     if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
 
-    //where are we inserting?
-    struct kv_list *curr = dev->data->ukey_data->fp;
-    struct kv_vault *vault = dev->data;
+    if (buf == "") {
+        //delete
+       if (curr == NULL) {
+            
+       }
+        struct kv_list *del = find_key(vault, idnum, key, keynum); 
+       delete_pair(vault, idnum, key, del->kv.val);
+    } else {
+        //insert
+        insert(vault->ukey_data->data, buf);
+    }
 	
-	//here we get the index of the key, and the user id
-	//find the key then check if it's NULL or not
-	int keynum;
-	int idnum = get_user_id();
-	fix_uid(&idnum);
-    list = find_key(vault, idnum, curr, &keynum);
-	
-	if (list == NULL) goto out;
-	if (! list->data) {
-		list->data = kmalloc(kv_list * sizeof(char *), GFP_KERNEL);
-		if (! dptr->data) goto out;
-		
-		memset(list->data, 0, kv_list * sizeof(char *));
-	}
-	
-	if (count > 
-	
-	
-	
-    return 0;
+	/* release the semaphore and return */
+  out:
+	up(&dev->sem);
+	return retval;
+
 }
 
-void fix_uid(int &id) {
-	if (id == 0) id = 1;
-	else id -= 998;
+void insert(struct kv_list **data, const char __user *buf) {
+    /*int i, space;
+    for (i = 0; i < strlen(buf); i++) {
+        if (buf[i] == ' ') {
+            space = i;
+            break;
+        }
+    }
+
+    char* key = new char[space];
+    for (i = 0; i < space; i++) key[i] = buf[i];
+    for (i = (space + 1); i < strlen(buf); i++) val[i] = buf[i];
+    insert_from_list(data, key, val);*/
+    //stub
 }
+
+void fix_uid(int *id) {
+    //is this going to cause problems?
+	if (*id == 0) *id = 1;
+	else *id -= 998;
+}
+
+int get_user_id(void) {
+    int id = get_current_user()->uid.val;
+    fix_uid(&id);
+    return id;
+}
+
 
 long kv_mod_ioctl(struct file *filp, unsigned int cmd, unsigned long arg) {
     //TODO: stub
@@ -195,6 +223,8 @@ struct file_operations kv_mod_fops = {
  * have not been initialized
  */
 void kv_mod_cleanup_module(void) {
+    printk(KERN_WARNING "Debug:  removing module\n");
+
     dev_t devno = MKDEV(kv_mod_major, kv_mod_minor);
 
 	/* if the devices were succesfully allocated, then the referencing pointer
@@ -206,7 +236,7 @@ void kv_mod_cleanup_module(void) {
        * deleting them from the kernel */
 	   int i;
 		for (i = 0; i < kv_mod_nr_devs; i++) {
-			kv_mod_trim(kv_mod_devices + i);
+			remove_data(kv_mod_devices + i);
 			cdev_del(&kv_mod_devices[i].cdev);
 		}
 
@@ -215,6 +245,8 @@ void kv_mod_cleanup_module(void) {
 	}
 
     unregister_chrdev_region(devno, kv_mod_nr_devs);
+
+    printk(KERN_WARNING "Debug:  removal complete\n");
 }
 
 
@@ -238,6 +270,7 @@ int kv_mod_init_module(void) {
     int result, i;
     dev_t dev = 0;
 
+    printk(KERN_WARNING "Debug:  initializing kv_mod module\n");
     /*
     * Compile-time default for major is zero (dynamically assigned) unless 
     * directed otherwise at load time.  Also get range of minors to work with.
@@ -246,6 +279,7 @@ int kv_mod_init_module(void) {
     if (kv_mod_major == 0) {
 		result      = alloc_chrdev_region(&dev,kv_mod_minor,kv_mod_nr_devs,"kv_mod");
 		kv_mod_major = MAJOR(dev);
+        printk(KERN_WARNING "Debug:  kv_mod_major number is %d\n", kv_mod_major);
 	} else {
 		dev    = MKDEV(kv_mod_major, kv_mod_minor);
 		result = register_chrdev_region(dev, kv_mod_nr_devs, "kv_mod");
@@ -274,12 +308,16 @@ int kv_mod_init_module(void) {
 	memset(kv_mod_devices, 0, kv_mod_nr_devs * sizeof(struct kv_mod_dev));
    /* Initialize each device. */
 	for (i = 0; i < kv_mod_nr_devs; i++) {
-        //TODO: is this the right size to pass in? Should we check for errors?
+        // Need to alloc the data field so there is something for init_vault to init
+        kv_mod_devices[i].data = kmalloc(sizeof(struct key_vault), GFP_KERNEL); 
+        memset(kv_mod_devices[i].data, 0, sizeof(struct key_vault));
+
         init_vault(kv_mod_devices[i].data, MAX_KEY_USER);
 		sema_init(&kv_mod_devices[i].sem, 1);
 		kv_mod_setup_cdev(&kv_mod_devices[i], i);
 	}
 
+    printk(KERN_WARNING "Debug:  initializing complete\n");
       /* succeed */
 	return 0;
 }
