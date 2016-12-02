@@ -143,7 +143,7 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
     //get the semaphore
     if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
 
-    if (strcmp(buf, "\0") == 0) {
+    if (strcmp(buf, "") == 0) {
         //delete
         printk(KERN_WARNING "Debug:  deleting key value pair\n");
         if (curr == NULL) {
