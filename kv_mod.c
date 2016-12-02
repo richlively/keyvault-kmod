@@ -129,30 +129,57 @@ ssize_t kv_mod_read(struct file *filp, char __user *buf, size_t count,
 
 ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
                      loff_t *f_pos) {
-    //TODO: stub
+    printk(KERN_WARNING "Debug:  starting write on buf: %s\n", buf);
     struct kv_mod_dev *dev = filp->private_data;
     ssize_t retval = -ENOMEM;
    
     
     struct key_vault *vault = dev->data;
     struct kv_list *curr = vault->ukey_data->fp;
-    int *keynum;
 	int idnum = get_user_id();
-    char* key = curr->kv.key;
+    char *key;
+    char *val;
 
     //get the semaphore
     if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
 
-    if (buf == "") {
+    if (strcmp(buf, "\0") == 0) {
         //delete
-       if (curr == NULL) {
-            
-       }
-        struct kv_list *del = find_key(vault, idnum, key, keynum); 
-       delete_pair(vault, idnum, key, del->kv.val);
+        printk(KERN_WARNING "Debug:  deleting key value pair\n");
+        if (curr == NULL) {
+            //nothing to delete
+            printk(KERN_WARNING "Debug:  nothing to erase\n");
+            goto out;
+        }
+        key = curr->kv.key;
+        val = curr->kv.val;
+        //update the filepointer
+        vault->ukey_data->fp = next_key(vault, idnum, curr);
+        //delete the pair
+        delete_pair(vault, idnum, key, val);
+        printk(KERN_WARNING "Debug:  finished delete; fp now points to: %p\n", vault->ukey_data->fp);
     } else {
         //insert
-        insert(vault->ukey_data->data, buf);
+        printk(KERN_WARNING "Debug:  inserting %s\n", buf);
+    	key = kmalloc(MAX_KEY_SIZE, GFP_KERNEL);
+        val = kmalloc(MAX_VAL_SIZE, GFP_KERNEL);
+        //simple parsing for loop (doesn't handle bad input)
+        int space = -1;
+        int i;
+        for (i = 0; i < strlen(buf); i++) {
+            if (buf[i] == ' ') {
+                space = i;
+            }
+        }
+        strncpy(key, buf, space);
+        key[space] = '\0';
+        for (i = space + 1; i < strlen(buf); i++) {
+            val[i] = buf[i];
+        }
+        printk(KERN_WARNING "Debug:  key: %s\nval: %s\n", key, val);
+        insert_pair(vault, idnum, key, val);
+        vault->ukey_data->fp = find_key_val(vault, idnum, key, val);
+        printk(KERN_WARNING "Debug:  finished inserting; fp now points to %p\n", vault->ukey_data->fp);
     }
 	
 	/* release the semaphore and return */
@@ -162,7 +189,7 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
 
 }
 
-void insert(struct kv_list **data, const char __user *buf) {
+//void insert(struct kv_list **data, const char __user *buf) {
     /*int i, space;
     for (i = 0; i < strlen(buf); i++) {
         if (buf[i] == ' ') {
@@ -176,7 +203,7 @@ void insert(struct kv_list **data, const char __user *buf) {
     for (i = (space + 1); i < strlen(buf); i++) val[i] = buf[i];
     insert_from_list(data, key, val);*/
     //stub
-}
+//}
 
 void fix_uid(int *id) {
     //is this going to cause problems?
