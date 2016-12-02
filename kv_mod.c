@@ -133,17 +133,29 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
     struct kv_mod_dev *dev = filp->private_data;
     ssize_t retval = -ENOMEM;
    
-    
+    /* this is where the actual "write" occurs, when we copy from the
+    * the user-supplied buffer into the in-memory data area.  This copy is
+    * handled by the copy_from_user() function, which handles the
+    * transfer of data from user space data structures to kernel space
+    * data structures.
+    */
+    char *kbuf = kmalloc(count*sizeof(char), GFP_KERNEL);
+	if (copy_from_user(kbuf, buf, count)) {
+		retval = -EFAULT;
+		goto out;
+	}
+
     struct key_vault *vault = dev->data;
     struct kv_list *curr = vault->ukey_data->fp;
 	int idnum = get_user_id();
-    char *key;
-    char *val;
-
-    //get the semaphore
+        //get the semaphore
     if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
-
-    if (strcmp(buf, "") == 0) {
+    //if (buf[0] == '\0') {
+    //if (buf == "") {
+    printk(KERN_WARNING "Debug:  about to decide");
+    int please = strcmp(kbuf,"");
+    printk(KERN_WARNING "Debug:  comparision: %i", please);
+    if (strcmp(kbuf, "") == 0) {
         //delete
         printk(KERN_WARNING "Debug:  deleting key value pair\n");
         if (curr == NULL) {
@@ -151,39 +163,29 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
             printk(KERN_WARNING "Debug:  nothing to erase\n");
             goto out;
         }
-        key = curr->kv.key;
-        val = curr->kv.val;
         //update the filepointer
         vault->ukey_data->fp = next_key(vault, idnum, curr);
         //delete the pair
-        delete_pair(vault, idnum, key, val);
+        delete_pair(vault, idnum, curr->kv.key, curr->kv.val);
         printk(KERN_WARNING "Debug:  finished delete; fp now points to: %p\n", vault->ukey_data->fp);
     } else {
         //insert
         printk(KERN_WARNING "Debug:  inserting %s\n", buf);
-    	key = kmalloc(MAX_KEY_SIZE, GFP_KERNEL);
-        val = kmalloc(MAX_VAL_SIZE, GFP_KERNEL);
-        //simple parsing for loop (doesn't handle bad input)
-        int space = -1;
-        int i;
-        for (i = 0; i < strlen(buf); i++) {
-            if (buf[i] == ' ') {
-                space = i;
-            }
-        }
-        strncpy(key, buf, space);
-        key[space] = '\0';
-        for (i = space + 1; i < strlen(buf); i++) {
-            val[i] = buf[i];
-        }
+        
+        char *key = kmalloc(count*sizeof(char), GFP_KERNEL);
+        char *val = kmalloc(count*sizeof(char), GFP_KERNEL);
+        sscanf(kbuf, "%s %s", key, val);
         printk(KERN_WARNING "Debug:  key: %s\nval: %s\n", key, val);
         insert_pair(vault, idnum, key, val);
         vault->ukey_data->fp = find_key_val(vault, idnum, key, val);
         printk(KERN_WARNING "Debug:  finished inserting; fp now points to %p\n", vault->ukey_data->fp);
+        kfree(key);
+        kfree(val);
     }
 	
 	/* release the semaphore and return */
   out:
+    kfree(kbuf);
 	up(&dev->sem);
 	return retval;
 
