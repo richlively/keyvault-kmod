@@ -148,13 +148,14 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
     struct key_vault *vault = dev->data;
     struct kv_list *curr = vault->ukey_data->fp;
 	int idnum = get_user_id();
-        //get the semaphore
+        //get the semaphore; should this be above the first malloc?
     if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
     //if (buf[0] == '\0') {
     //if (buf == "") {
     printk(KERN_WARNING "Debug:  about to decide");
     int please = strcmp(kbuf,"");
     printk(KERN_WARNING "Debug:  comparision: %i", please);
+    return 0;
     if (strcmp(kbuf, "") == 0) {
         //delete
         printk(KERN_WARNING "Debug:  deleting key value pair\n");
