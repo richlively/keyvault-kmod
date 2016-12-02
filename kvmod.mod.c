@@ -30,6 +30,7 @@ __attribute__((section("__versions"))) = {
 	{ 0x8329e6f0, __VMLINUX_SYMBOL_STR(memset) },
 	{ 0xb74ea848, __VMLINUX_SYMBOL_STR(current_task) },
 	{ 0x50eedeb8, __VMLINUX_SYMBOL_STR(printk) },
+	{ 0x20c55ae0, __VMLINUX_SYMBOL_STR(sscanf) },
 	{ 0xb6ed1e53, __VMLINUX_SYMBOL_STR(strncpy) },
 	{ 0xb4390f9a, __VMLINUX_SYMBOL_STR(mcount) },
 	{ 0x6c2e3320, __VMLINUX_SYMBOL_STR(strncmp) },
@@ -48,4 +49,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "E654135DDCA058F805CB66F");
+MODULE_INFO(srcversion, "ECB115531B40108EB03E8C9");

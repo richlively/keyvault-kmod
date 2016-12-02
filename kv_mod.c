@@ -132,30 +132,39 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
     printk(KERN_WARNING "Debug:  starting write on buf: %s\n", buf);
     struct kv_mod_dev *dev = filp->private_data;
     ssize_t retval = -ENOMEM;
-   
+   //get the semaphore; should this be above the first malloc?
+    if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
+
     /* this is where the actual "write" occurs, when we copy from the
     * the user-supplied buffer into the in-memory data area.  This copy is
     * handled by the copy_from_user() function, which handles the
     * transfer of data from user space data structures to kernel space
     * data structures.
     */
-    char *kbuf = kmalloc(count*sizeof(char), GFP_KERNEL);
-	if (copy_from_user(kbuf, buf, count)) {
+    char *kbuf = kmalloc((count+1)*sizeof(char), GFP_KERNEL);
+
+    if (kbuf == NULL) {
+		retval = -EFAULT;
+		goto out;
+    }
+    memset(kbuf, 0, (count+1)*sizeof(char));
+
+	if (copy_from_user(kbuf, buf, count*sizeof(char))) {
 		retval = -EFAULT;
 		goto out;
 	}
+    kbuf[count] = '\0';
 
+    
+    printk(KERN_WARNING "Debug:  kbuf: %s\n", kbuf);
     struct key_vault *vault = dev->data;
     struct kv_list *curr = vault->ukey_data->fp;
 	int idnum = get_user_id();
-        //get the semaphore; should this be above the first malloc?
-    if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
-    //if (buf[0] == '\0') {
+            //if (buf[0] == '\0') {
     //if (buf == "") {
     printk(KERN_WARNING "Debug:  about to decide");
     int please = strcmp(kbuf,"");
     printk(KERN_WARNING "Debug:  comparision: %i", please);
-    return 0;
     if (strcmp(kbuf, "") == 0) {
         //delete
         printk(KERN_WARNING "Debug:  deleting key value pair\n");
@@ -169,17 +178,44 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
         //delete the pair
         delete_pair(vault, idnum, curr->kv.key, curr->kv.val);
         printk(KERN_WARNING "Debug:  finished delete; fp now points to: %p\n", vault->ukey_data->fp);
+        if (vault->ukey_data->fp == NULL) {
+            printk(KERN_WARNING "Debug:  fp is NULL");
+        }
+        else {
+            printk(KERN_WARNING "Debug:  fp has key \"%s\" and val \"%s\"\n", vault->ukey_data->fp->kv.key, vault->ukey_data->fp->kv.val);
+        }
     } else {
         //insert
-        printk(KERN_WARNING "Debug:  inserting %s\n", buf);
+        printk(KERN_WARNING "Debug:  inserting %s\n", kbuf);
         
         char *key = kmalloc(count*sizeof(char), GFP_KERNEL);
+        if (key == NULL) {
+            retval = -EFAULT;
+            goto out;
+        }
         char *val = kmalloc(count*sizeof(char), GFP_KERNEL);
+        if (key == NULL) {
+		    retval = -EFAULT;
+		    goto out;
+        }
         sscanf(kbuf, "%s %s", key, val);
-        printk(KERN_WARNING "Debug:  key: %s\nval: %s\n", key, val);
+        printk(KERN_WARNING "Debug:  key: %s val: %s\n", key, val);
         insert_pair(vault, idnum, key, val);
+        if (vault->ukey_data->fp != NULL) {
+            printk(KERN_WARNING "Debug: inserted item has key \"%s\" and val \"%s\"\n",
+                    vault->ukey_data->fp->kv.key, vault->ukey_data->fp->kv.val);
+            printk(KERN_WARNING "Debug: inserted item's next points to %p\n", vault->ukey_data->fp->next);
+        }
         vault->ukey_data->fp = find_key_val(vault, idnum, key, val);
         printk(KERN_WARNING "Debug:  finished inserting; fp now points to %p\n", vault->ukey_data->fp);
+        
+        if (vault->ukey_data->fp == NULL) {
+            printk(KERN_WARNING "Debug:  fp is NULL");
+        }
+        else {
+            printk(KERN_WARNING "Debug:  fp has key \"%s\" and val \"%s\"\n", vault->ukey_data->fp->kv.key, vault->ukey_data->fp->kv.val);
+        }
+
         kfree(key);
         kfree(val);
     }
