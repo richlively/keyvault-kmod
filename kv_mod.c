@@ -79,26 +79,29 @@ int kv_mod_open(struct inode *inode, struct file *filp) {
       to obtain the scull_dev object (since scull_dev also contains
       a cdev object.
     */
-    printk(KERN_WARNING "starting open\n");
+    printk(KERN_WARNING "Debug:  -----\n");
+    printk(KERN_WARNING "Debug:  starting open\n");
     dev = container_of(inode->i_cdev, struct kv_mod_dev, cdev);
     /* so that we don't need to use the container_of() macro repeatedly,
 		we save the handle to dev in the file's private_data for other methods.
 	 */
     filp->private_data = dev;
 
-    //TODO: finish open setup
-
     //here we need to decide if we set fp to null or the first
     //key needed
     int uid = get_user_id();
-    if (num_keys(dev->data, uid) == 0 ) {
+    int numKeys = num_pairs(dev->data, uid);
+    printk(KERN_WARNING "Debug:  there are %i keys in the vault\n", numKeys);
+    if (num_pairs(dev->data, uid) == 0 ) {
         dev->data->ukey_data[uid-1].fp = NULL;
+        printk(KERN_WARNING "Debug:  fp for user %i is NULL\n", uid);
     } else {
-        //TODO: test if this is right
         //set the file pointer to the first key value pair in the user's key vault
         dev->data->ukey_data[uid-1].fp = dev->data->ukey_data[uid-1].data[0];
+        printk(KERN_WARNING "Debug:  fp for user %i is %p\n", uid, dev->data->ukey_data[uid-1].fp);
     }
-    printk(KERN_WARNING "finished open\n");
+    printk(KERN_WARNING "Debug:  finished open\n");
+    printk(KERN_WARNING "Debug:  -----\n");
 	return 0;
 }
 
@@ -133,12 +136,12 @@ ssize_t kv_mod_read(struct file *filp, char __user *buf, size_t count,
     int uid = get_user_id();
     // get key-val pair at current fp for this user - pay attention to indexing
     struct kv_list *curr = vault->ukey_data[uid-1].fp;
-    printk(KERN_WARNING "Debug:  fp(%p)\n", curr);
     if (curr == NULL) {
         printk(KERN_WARNING "Debug: nothing to read\n");
         retval = 0;
         goto out;
     }
+    printk(KERN_WARNING "Debug:  fp(%p)\n", curr);
     char key[MAX_KEY_SIZE];
     char val[MAX_VAL_SIZE];
     strncpy(key, curr->kv.key, 80);
@@ -157,7 +160,12 @@ ssize_t kv_mod_read(struct file *filp, char __user *buf, size_t count,
     printk(KERN_WARNING "Debug: old fp: %p\n", curr);
     printk(KERN_WARNING "Debug: next kv_list: %p\n", curr->next);
     vault->ukey_data[uid-1].fp = next_key(vault, uid, curr);
-    printk(KERN_WARNING "Debug: new fp: %p\n", vault->ukey_data[uid-1].fp);
+    if (vault->ukey_data[uid-1].fp == NULL) {
+        printk(KERN_WARNING "Debug: new fp: NULL\n");    
+    }
+    else {
+        printk(KERN_WARNING "Debug: new fp: %p\n", vault->ukey_data[uid-1].fp);
+    }
     // set count to 1 (success) or 0 (faiure)
 
     printk(KERN_WARNING "Debug: finished read\n");
@@ -245,18 +253,27 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
         printk(KERN_WARNING "Debug:  key: %s val: %s\n", key, val);
         int rc = insert_pair(vault, uid, key, val);
         if (rc /*vault->ukey_data.fp != NULL*/) {
-            printk(KERN_WARNING "Debug: fp has key \"%s\" and val \"%s\"\n",
-                    vault->ukey_data[uid-1].fp->kv.key, vault->ukey_data[uid-1].fp->kv.val);
-            //printk(KERN_WARNING "Debug: inserted item's next points to %p\n", vault->ukey_data[uid-1].fp->next);
-        }
-        vault->ukey_data[uid-1].fp = find_key_val(vault, uid, key, val);
-        printk(KERN_WARNING "Debug:  finished inserting; fp now points to %p\n", vault->ukey_data[uid-1].fp);
-        
-        if (vault->ukey_data[uid-1].fp == NULL) {
-            printk(KERN_WARNING "Debug:  fp is NULL");
+            if (vault->ukey_data[uid-1].fp == NULL) {
+                printk(KERN_WARNING "Debug:  fp is NULL\n");
+            }
+            else {
+                printk(KERN_WARNING "Debug:  fp (%p) has key \"%s\" and val \"%s\"\n",
+                        vault->ukey_data[uid-1].fp, vault->ukey_data[uid-1].fp->kv.key, vault->ukey_data[uid-1].fp->kv.val);
+                //printk(KERN_WARNING "Debug: inserted item's next points to %p\n", vault->ukey_data[uid-1].fp->next);
+            }
         }
         else {
-            printk(KERN_WARNING "Debug:  fp (%p) has key \"%s\" and val \"%s\"\n", vault->ukey_data[uid-1].fp, vault->ukey_data[uid-1].fp->kv.key, vault->ukey_data[uid-1].fp->kv.val);
+            printk(KERN_WARNING "Debug:  failed to insert\n");
+            goto out;
+        }
+        vault->ukey_data[uid-1].fp = find_key_val(vault, uid, key, val);
+        
+        if (vault->ukey_data[uid-1].fp == NULL) {
+            printk(KERN_WARNING "Debug:  could not find; fp is NULL");
+        }
+        else {
+            printk(KERN_WARNING "Debug:  finished inserting; fp now points to %p\n", vault->ukey_data[uid-1].fp);
+            printk(KERN_WARNING "Debug:  new fp (%p) has key \"%s\" and val \"%s\"\n", vault->ukey_data[uid-1].fp, vault->ukey_data[uid-1].fp->kv.key, vault->ukey_data[uid-1].fp->kv.val);
         }
 
         //kfree(key);
@@ -332,6 +349,7 @@ struct file_operations kv_mod_fops = {
  * have not been initialized
  */
 void kv_mod_cleanup_module(void) {
+    printk(KERN_WARNING "Debug:  -----\n");
     printk(KERN_WARNING "Debug:  removing module\n");
 
     dev_t devno = MKDEV(kv_mod_major, kv_mod_minor);

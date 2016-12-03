@@ -1,0 +1,62 @@
+[  147.090475] Debug:  -----
+[  147.090478] Debug:  starting open
+[  147.090480] Debug:  there are 0 keys in the vault
+[  147.090480] Debug:  fp for user 2 is NULL
+[  147.090481] Debug:  finished open
+[  147.090482] Debug:  -----
+[  149.196240] Debug:  starting write on buf: Shomper Keith
+[  149.196243] Debug:  kbuf: Shomper Keith
+[  149.196244] Debug:  about to decide
+[  149.196245] Debug:  comparision: 1
+[  149.196246] Debug:  inserting Shomper Keith
+[  149.196248] Debug:  key: Shomper val: Keith
+[  149.196250] Debug:  fp is NULL
+[  149.196251] Debug:  finished inserting; fp now points to ed790dc0
+[  149.196252] Debug:  new fp (ed790dc0) has key "Shomper" and val "Keith"
+[  176.613428] Debug:  -----
+[  176.613432] Debug:  starting open
+[  176.613433] Debug:  there are 0 keys in the vault
+[  176.613434] Debug:  fp for user 2 is NULL
+[  176.613435] Debug:  finished open
+[  176.613436] Debug:  -----
+[  180.140282] Debug:  starting write on buf: Shomper Matthew
+[  180.140286] Debug:  kbuf: Shomper Matthew
+[  180.140287] Debug:  about to decide
+[  180.140288] Debug:  comparision: 1
+[  180.140289] Debug:  inserting Shomper Matthew
+[  180.140290] Debug:  key: Shomper val: Matthew
+[  180.140302] BUG: unable to handle kernel paging request at 00006495
+[  180.140305] IP: [<f936a052>] insert_in_list+0x22/0xb0 [kvmod]
+[  180.140311] *pdpt = 000000002d5f0001 *pde = 0000000000000000 
+[  180.140314] Oops: 0000 [#1] SMP 
+[  180.140316] Modules linked in: kvmod(OE) vmw_vsock_vmci_transport vsock vmw_balloon input_leds coretemp joydev serio_raw 8250_fintek shpchp i2c_piix4 vmw_vmci mac_hid parport_pc ppdev lp parport autofs4 psmouse mptspi mptscsih pcnet32 mptbase mii scsi_transport_spi vmwgfx ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm fjes pata_acpi
+[  180.140331] CPU: 1 PID: 2313 Comm: 2-TestWrite Tainted: G           OE   4.4.0-51-generic #72-Ubuntu
+[  180.140333] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 09/21/2015
+[  180.140334] task: eeb5d780 ti: f47a2000 task.ti: f47a2000
+[  180.140335] EIP: 0060:[<f936a052>] EFLAGS: 00010202 CPU: 1
+[  180.140337] EIP is at insert_in_list+0x22/0xb0 [kvmod]
+[  180.140338] EAX: 0000646d EBX: 0000646d ECX: f47a3ea0 EDX: f47a3e8c
+[  180.140339] ESI: f4784d80 EDI: f47a3e8c EBP: f47a3e50 ESP: f47a3e40
+[  180.140340]  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068
+[  180.140341] CR0: 80050033 CR2: 00006495 CR3: 3546ba80 CR4: 000006f0
+[  180.140404] Stack:
+[  180.140406]  f47a3ea0 ee914a10 00000000 f4784d80 f47a3e68 f936a155 f47a3e8c ed6fcf04
+[  180.140411]  f58a8d88 00000010 f47a3f14 f936960d f47a3ea0 f47a3e8c f47a3ea0 f47a3ea0
+[  180.140414]  f47a3e94 00000000 00000002 6d6f6853 00726570 f043d27c c1b2aaf0 00000002
+[  180.140417] Call Trace:
+[  180.140420]  [<f936a155>] insert_pair+0x75/0xe0 [kvmod]
+[  180.140422]  [<f936960d>] kv_mod_write+0x27d/0x360 [kvmod]
+[  180.140425]  [<c10af76f>] ? __wake_up+0x3f/0x50
+[  180.140429]  [<c13483e6>] ? apparmor_file_permission+0x16/0x20
+[  180.140433]  [<c1301029>] ? security_file_permission+0x39/0xc0
+[  180.140435]  [<c11dd798>] ? rw_verify_area+0x58/0x140
+[  180.140437]  [<f9369390>] ? kv_mod_read+0x250/0x250 [kvmod]
+[  180.140438]  [<c11dd46f>] __vfs_write+0x1f/0x50
+[  180.140439]  [<c11dda4c>] vfs_write+0x8c/0x1b0
+[  180.140441]  [<c11de441>] SyS_write+0x51/0xb0
+[  180.140444]  [<c100393d>] do_fast_syscall_32+0x8d/0x150
+[  180.140447]  [<c17b7b9c>] sysenter_past_esp+0x3d/0x61
+[  180.140448] Code: 90 90 90 90 90 90 90 90 90 55 89 e5 57 56 53 83 ec 04 66 66 66 66 90 8b 18 89 c6 89 d7 89 4d f0 85 db 75 07 eb 62 8d 76 00 89 c3 <8b> 43 28 85 c0 75 f7 a1 78 3e d2 c1 b9 30 00 00 00 ba c0 00 40
+[  180.140465] EIP: [<f936a052>] insert_in_list+0x22/0xb0 [kvmod] SS:ESP 0068:f47a3e40
+[  180.140468] CR2: 0000000000006495
+[  180.140491] ---[ end trace 258e115135218e50 ]---

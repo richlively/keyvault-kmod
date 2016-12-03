@@ -1,0 +1,56 @@
+[  201.145957] Debug:  -----
+[  201.145961] Debug:  starting open
+[  201.145962] Debug:  there are 0 keys in the vault
+[  201.145963] Debug:  fp for user 2 is NULL
+[  201.145964] Debug:  finished open
+[  201.145964] Debug:  -----
+[  204.522254] Debug:  starting write on buf: Shomper keith
+[  204.522258] Debug:  kbuf: Shomper keith
+[  204.522259] Debug:  about to decide
+[  204.522260] Debug:  comparision: 1
+[  204.522261] Debug:  inserting Shomper keith
+[  204.522263] Debug:  key: Shomper val: keith
+[  204.522265] Debug:  fp is NULL
+[  204.522267] Debug:  finished inserting; fp now points to f52d4d80
+[  204.522267] Debug:  new fp (f52d4d80) has key "Shomper" and val "keith"
+[  213.202138] Debug:  starting write on buf: Shomper matthew
+[  213.202142] Debug:  kbuf: Shomper matthew
+[  213.202143] Debug:  about to decide
+[  213.202144] Debug:  comparision: 1
+[  213.202145] Debug:  inserting Shomper matthew
+[  213.202146] Debug:  key: Shomper val: matthew
+[  213.202157] BUG: unable to handle kernel paging request at 00006495
+[  213.202160] IP: [<f92b5052>] insert_in_list+0x22/0xb0 [kvmod]
+[  213.202165] *pdpt = 000000002d448001 *pde = 0000000000000000 
+[  213.202167] Oops: 0000 [#1] SMP 
+[  213.202169] Modules linked in: kvmod(OE) vmw_vsock_vmci_transport vsock input_leds vmw_balloon coretemp joydev serio_raw shpchp i2c_piix4 vmw_vmci 8250_fintek mac_hid parport_pc ppdev lp parport autofs4 vmwgfx psmouse ttm drm_kms_helper syscopyarea sysfillrect sysimgblt pcnet32 mii fb_sys_fops mptspi drm mptscsih mptbase scsi_transport_spi pata_acpi fjes
+[  213.202185] CPU: 0 PID: 2338 Comm: 2-TestWrite Tainted: G           OE   4.4.0-51-generic #72-Ubuntu
+[  213.202186] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 09/21/2015
+[  213.202187] task: ed42cec0 ti: ed68a000 task.ti: ed68a000
+[  213.202189] EIP: 0060:[<f92b5052>] EFLAGS: 00010202 CPU: 0
+[  213.202191] EIP is at insert_in_list+0x22/0xb0 [kvmod]
+[  213.202192] EAX: 0000646d EBX: 0000646d ECX: ed68bea0 EDX: ed68be8c
+[  213.202193] ESI: ee567360 EDI: ed68be8c EBP: ed68be50 ESP: ed68be40
+[  213.202194]  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068
+[  213.202195] CR0: 80050033 CR2: 00006495 CR3: 2d4d2920 CR4: 000006f0
+[  213.202239] Stack:
+[  213.202240]  ed68bea0 f55cbe10 00000000 ee567360 ed68be68 f92b5155 ed68be8c ee567064
+[  213.202243]  f5af1e88 00000010 ed68bf14 f92b460d ed68bea0 ed68be8c ed68bea0 ed68bea0
+[  213.202245]  ed68be94 f52d4d80 00000002 6d6f6853 00726570 f043d27c c1b2aaf0 00000002
+[  213.202248] Call Trace:
+[  213.202252]  [<f92b5155>] insert_pair+0x75/0xe0 [kvmod]
+[  213.202253]  [<f92b460d>] kv_mod_write+0x27d/0x360 [kvmod]
+[  213.202257]  [<c10af76f>] ? __wake_up+0x3f/0x50
+[  213.202261]  [<c13483e6>] ? apparmor_file_permission+0x16/0x20
+[  213.202265]  [<c1301029>] ? security_file_permission+0x39/0xc0
+[  213.202267]  [<c11dd798>] ? rw_verify_area+0x58/0x140
+[  213.202269]  [<f92b4390>] ? kv_mod_read+0x250/0x250 [kvmod]
+[  213.202270]  [<c11dd46f>] __vfs_write+0x1f/0x50
+[  213.202272]  [<c11dda4c>] vfs_write+0x8c/0x1b0
+[  213.202273]  [<c11de441>] SyS_write+0x51/0xb0
+[  213.202276]  [<c100393d>] do_fast_syscall_32+0x8d/0x150
+[  213.202280]  [<c17b7b9c>] sysenter_past_esp+0x3d/0x61
+[  213.202281] Code: 90 90 90 90 90 90 90 90 90 55 89 e5 57 56 53 83 ec 04 66 66 66 66 90 8b 18 89 c6 89 d7 89 4d f0 85 db 75 07 eb 62 8d 76 00 89 c3 <8b> 43 28 85 c0 75 f7 a1 78 3e d2 c1 b9 30 00 00 00 ba c0 00 40
+[  213.202298] EIP: [<f92b5052>] insert_in_list+0x22/0xb0 [kvmod] SS:ESP 0068:ed68be40
+[  213.202300] CR2: 0000000000006495
+[  213.202302] ---[ end trace d5f3fedbb397f1c4 ]---
