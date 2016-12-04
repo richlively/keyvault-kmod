@@ -180,7 +180,7 @@ ssize_t kv_mod_read(struct file *filp, char __user *buf, size_t count,
         printk(KERN_WARNING "Debug: new fp: %p\n", vault->ukey_data[uid-1].fp);
     }
     // set count to 1 (success) or 0 (faiure)
-
+    retval = strlen(buf);
     printk(KERN_WARNING "Debug: finished read\n");
     // release semephore
   out:
@@ -239,12 +239,14 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
         vault->ukey_data[uid-1].fp = next_key(vault, uid, curr);
         //delete the pair
         delete_pair(vault, uid, curr->kv.key, curr->kv.val);
-        printk(KERN_WARNING "Debug:  finished delete; fp now points to: %p\n", vault->ukey_data[uid-1].fp);
+        retval = 1;
+        //printk(KERN_WARNING "Debug:  finished delete; fp now points to: %p\n", vault->ukey_data[uid-1].fp);
+        printk(KERN_WARNING "Debug:  finished delete\n");
         if (vault->ukey_data[uid-1].fp == NULL) {
             printk(KERN_WARNING "Debug:  fp is NULL");
         }
         else {
-            printk(KERN_WARNING "Debug:  fp has key \"%s\" and val \"%s\"\n", vault->ukey_data[uid-1].fp->kv.key, vault->ukey_data[uid-1].fp->kv.val);
+           // printk(KERN_WARNING "Debug:  fp has key \"%s\" and val \"%s\"\n", vault->ukey_data[uid-1].fp->kv.key, vault->ukey_data[uid-1].fp->kv.val);
         }
     } else {
         //insert
@@ -265,10 +267,11 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
         sscanf(kbuf, "%s %s", key, val);
         printk(KERN_WARNING "Debug:  key: %s val: %s\n", key, val);
         int rc = insert_pair(vault, uid, key, val);
-        printk(KERN_WARNING "Debug:  about to check value of rc line 255\n");
+        printk(KERN_WARNING "Debug:  about to check return value of insert_pair\n");
         if (rc /*vault->ukey_data.fp != NULL*/) {
-            printk(KERN_WARNING "Debug:  entered if rc line 257\n");
-            if (vault->ukey_data[uid-1].fp == NULL) {
+            printk(KERN_WARNING "Debug:  insert_pair was successful\n");
+            retval = 1;
+            /*if (vault->ukey_data[uid-1].fp == NULL) {
                 printk(KERN_WARNING "Debug:  fp is NULL\n");
             }
             else {
@@ -276,6 +279,7 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
                         vault->ukey_data[uid-1].fp, vault->ukey_data[uid-1].fp->kv.key, vault->ukey_data[uid-1].fp->kv.val);
                 //printk(KERN_WARNING "Debug: inserted item's next points to %p\n", vault->ukey_data[uid-1].fp->next);
             }
+            */
         }
         else {
             printk(KERN_WARNING "Debug:  failed to insert\n");
@@ -287,8 +291,9 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
             printk(KERN_WARNING "Debug:  could not find; fp is NULL");
         }
         else {
-            printk(KERN_WARNING "Debug:  finished inserting; fp now points to %p\n", vault->ukey_data[uid-1].fp);
-            printk(KERN_WARNING "Debug:  new fp (%p) has key \"%s\" and val \"%s\"\n", vault->ukey_data[uid-1].fp, vault->ukey_data[uid-1].fp->kv.key, vault->ukey_data[uid-1].fp->kv.val);
+            //printk(KERN_WARNING "Debug:  finished inserting; fp now points to %p\n", vault->ukey_data[uid-1].fp);
+            printk(KERN_WARNING "Debug:  finished inserting\n");
+            //printk(KERN_WARNING "Debug:  new fp (%p) has key \"%s\" and val \"%s\"\n", vault->ukey_data[uid-1].fp, vault->ukey_data[uid-1].fp->kv.key, vault->ukey_data[uid-1].fp->kv.val);
         }
 
         //kfree(key);
