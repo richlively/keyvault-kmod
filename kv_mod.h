@@ -97,17 +97,6 @@ long    kv_mod_ioctl (struct file *filp, unsigned int cmd, unsigned long arg);
  * H means "sHift":    switch T and Q atomically
  */
 #define KV_MOD_IOCSQUANTUM _IOW (KV_MOD_IOC_MAGIC,   1, int)
-#define KV_MOD_IOCSQSET    _IOW (KV_MOD_IOC_MAGIC,   2, int)
-#define KV_MOD_IOCTQUANTUM _IO  (KV_MOD_IOC_MAGIC,   3     )
-#define KV_MOD_IOCTQSET    _IO  (KV_MOD_IOC_MAGIC,   4     )
-#define KV_MOD_IOCGQUANTUM _IOR (KV_MOD_IOC_MAGIC,   5, int)
-#define KV_MOD_IOCGQSET    _IOR (KV_MOD_IOC_MAGIC,   6, int)
-#define KV_MOD_IOCQQUANTUM _IO  (KV_MOD_IOC_MAGIC,   7     )
-#define KV_MOD_IOCQQSET    _IO  (KV_MOD_IOC_MAGIC,   8     )
-#define KV_MOD_IOCXQUANTUM _IOWR(KV_MOD_IOC_MAGIC,   9, int)
-#define KV_MOD_IOCXQSET    _IOWR(KV_MOD_IOC_MAGIC,  10, int)
-#define KV_MOD_IOCHQUANTUM _IO  (KV_MOD_IOC_MAGIC,  11     )
-#define KV_MOD_IOCHQSET    _IO  (KV_MOD_IOC_MAGIC,  12     )
-#define KV_MOD_IOC_MAXNR                           12
+#define KV_MOD_IOC_MAXNR 1
 
 #endif /* _KV_MOD_H_ */

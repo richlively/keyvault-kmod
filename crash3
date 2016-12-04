@@ -1,0 +1,75 @@
+[  420.387864] Debug:  initializing kv_mod module
+[  420.387867] Debug:  kv_mod_major number is 247
+[  420.387869] Debug:  initializing complete
+[  435.414077] Debug:  -----
+[  435.414081] Debug:  starting open
+[  435.414082] Debug:  there are 0 keys in the vault
+[  435.414083] Debug:  fp for user 2 is NULL
+[  435.414084] Debug:  finished open
+[  435.414084] Debug:  -----
+[  438.807020] Debug:  starting write on buf: Shomper Keith
+[  438.807023] Debug:  kbuf: Shomper Keith
+[  438.807024] Debug:  about to decide
+[  438.807025] Debug:  comparision: 1
+[  438.807026] Debug:  inserting Shomper Keith
+[  438.807027] Debug:  key: Shomper val: Keith
+[  438.807029] Debug:  fp is NULL
+[  438.807030] Debug:  finished inserting; fp now points to ed79b380
+[  438.807031] Debug:  new fp (ed79b380) has key "Shomper" and val "Keith"
+[  448.182835] Debug:  starting write on buf: fdfd fdf
+[  448.182838] Debug:  kbuf: fdfd fdf
+[  448.182839] Debug:  about to decide
+[  448.182840] Debug:  comparision: 1
+[  448.182841] Debug:  inserting fdfd fdf
+[  448.182842] Debug:  key: fdfd val: fdf
+[  448.182845] Debug:  fp (ed79b380) has key "Shomper" and val "Keith"
+[  448.182846] Debug:  finished inserting; fp now points to ed79bd40
+[  448.182847] Debug:  new fp (ed79bd40) has key "fdfd" and val "fdf"
+[  452.695690] Debug:  starting write on buf: Shomper Matthew
+[  452.695693] Debug:  kbuf: Shomper Matthew
+[  452.695694] Debug:  about to decide
+[  452.695695] Debug:  comparision: 1
+[  452.695696] Debug:  inserting Shomper Matthew
+[  452.695698] Debug:  key: Shomper val: Matthew
+[  452.695700] Debug:  fp (ed79bd40) has key "fdfd" and val "fdf"
+[  452.695701] Debug:  finished inserting; fp now points to ed79cec0
+[  452.695702] Debug:  new fp (ed79cec0) has key "Shomper" and val "Matthew"
+[  454.999348] Debug:  starting write on buf: Lively Rich
+[  454.999351] Debug:  kbuf: Lively Rich
+[  454.999352] Debug:  about to decide
+[  454.999353] Debug:  comparision: 1
+[  454.999354] Debug:  inserting Lively Rich
+[  454.999356] Debug:  key: Lively val: Rich
+[  454.999358] Debug:  fp (ed79cec0) has key "Shomper" and val "Matthew"
+[  454.999359] Debug:  finished inserting; fp now points to ed79ce40
+[  454.999360] Debug:  new fp (ed79ce40) has key "Lively" and val "Rich"
+[  457.198207] Debug:  starting write on buf: Lively Emma
+[  457.198210] Debug:  kbuf: Lively Emma
+[  457.198211] Debug:  about to decide
+[  457.198212] Debug:  comparision: 1
+[  457.198213] Debug:  inserting Lively Emma
+[  457.198215] Debug:  key: Lively val: Emma
+[  457.198232] *pdpt = 0000000035334001 *pde = 0000000000000000 
+[  457.198235] Oops: 0000 [#1] SMP 
+[  457.198237] Modules linked in: kvmod(OE) vmw_vsock_vmci_transport vsock vmw_balloon joydev input_leds coretemp serio_raw shpchp 8250_fintek i2c_piix4 vmw_vmci mac_hid parport_pc ppdev lp parport autofs4 vmwgfx ttm psmouse drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops mptspi drm mptscsih mptbase pcnet32 mii scsi_transport_spi pata_acpi fjes
+[  457.198257] EIP: 0060:[<f92b7072>] EFLAGS: 00010206 CPU: 1
+[  457.198258] EIP is at insert_in_list+0x22/0xb0 [kvmod]
+[  457.198259] EAX: 00646d63 EBX: 00646d63 ECX: ed799ea0 EDX: ed799e8c
+[  457.198260] ESI: f3cbd9c8 EDI: ed799e8c EBP: ed799e50 ESP: ed799e40
+[  457.198261]  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068
+[  457.198262] CR0: 80050033 CR2: 00646d8b CR3: 33ce6b20 CR4: 000006f0
+[  457.198367] CR2: 0000000000646d8b
+[  457.198368] ---[ end trace 4b78dab2c1b43c00 ]---
+[  838.787127] Debug:  -----
+[  838.787130] Debug:  removing module
+[  838.787147] *pdpt = 0000000035776001 *pde = 0000000000000000 
+[  838.787149] Oops: 0000 [#2] SMP 
+[  838.787151] Modules linked in: kvmod(OE-) vmw_vsock_vmci_transport vsock vmw_balloon joydev input_leds coretemp serio_raw shpchp 8250_fintek i2c_piix4 vmw_vmci mac_hid parport_pc ppdev lp parport autofs4 vmwgfx ttm psmouse drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops mptspi drm mptscsih mptbase pcnet32 mii scsi_transport_spi pata_acpi fjes
+[  838.787171] EIP: 0060:[<f92b6bb0>] EFLAGS: 00010206 CPU: 0
+[  838.787173] EIP is at close_vault+0x60/0xb0 [kvmod]
+[  838.787174] EAX: 00000100 EBX: 00000100 ECX: 80400031 EDX: 80400032
+[  838.787175] ESI: 00000001 EDI: f5a6edd0 EBP: f5a49f00 ESP: f5a49ee8
+[  838.787176]  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068
+[  838.787177] CR0: 80050033 CR2: 00000128 CR3: 2d6c8220 CR4: 000006f0
+[  838.787274] CR2: 0000000000000128
+[  838.787276] ---[ end trace 4b78dab2c1b43c01 ]---

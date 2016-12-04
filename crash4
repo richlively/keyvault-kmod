@@ -1,0 +1,520 @@
+[  418.598504] Debug:  initializing kv_mod module
+[  418.598506] Debug:  kv_mod_major number is 247
+[  418.598508] Debug:  initializing complete
+[  429.781584] Debug:  -----
+[  429.781587] Debug:  starting open
+[  429.781589] Debug:  there are 0 keys in the vault
+[  429.781589] Debug:  fp for user 2 is NULL
+[  429.781590] Debug:  finished open
+[  429.781591] Debug:  -----
+[  432.789872] Debug:  starting write on buf: Shomper Keith
+[  432.789875] Debug:  kbuf: Shomper Keith
+[  432.789876] Debug:  about to decide
+[  432.789878] Debug:  comparision: 1
+[  432.789879] Debug:  inserting Shomper Keith
+[  432.789880] Debug:  key: Shomper val: Keith
+[  432.789881] Started insert_pair
+[  432.789882] 147
+[  432.789883] 158
+[  432.789883] Started insert_in_list
+[  432.789884] no keys
+[  432.789885] finished allocating, now get key and val
+[  432.789886] Finished insert_in_list
+[  432.789886] Finished insert_pair
+[  432.789887] Debug:  about to check value of rc line 255
+[  432.789888] Debug:  entered if rc line 257
+[  432.789888] Debug:  fp is NULL
+[  432.789890] Debug:  finished inserting; fp now points to ed5ba480
+[  432.789891] Debug:  new fp (ed5ba480) has key "Shomper" and val "Keith"
+[  437.134178] Debug:  starting write on buf: Shomper Matthew
+[  437.134181] Debug:  kbuf: Shomper Matthew
+[  437.134182] Debug:  about to decide
+[  437.134183] Debug:  comparision: 1
+[  437.134184] Debug:  inserting Shomper Matthew
+[  437.134186] Debug:  key: Shomper val: Matthew
+[  437.134187] Started insert_pair
+[  437.134187] 147
+[  437.134188] 158
+[  437.134189] Started insert_in_list
+[  437.134189] has keys
+[  437.134190] found the last element
+[  437.134191] allocated l->next
+[  437.134192] finished allocating, now get key and val
+[  437.134192] Finished insert_in_list
+[  437.134193] Finished insert_pair
+[  437.134194] Debug:  about to check value of rc line 255
+[  437.134194] Debug:  entered if rc line 257
+[  437.134196] Debug:  fp (ed5ba480) has key "Shomper" and val "Keith"
+[  437.134197] Debug:  finished inserting; fp now points to f5033340
+[  437.134198] Debug:  new fp (f5033340) has key "Shomper" and val "Matthew"
+[  442.621837] Debug:  starting write on buf: Shomper Test
+[  442.621840] Debug:  kbuf: Shomper Test
+[  442.621841] Debug:  about to decide
+[  442.621842] Debug:  comparision: 1
+[  442.621843] Debug:  inserting Shomper Test
+[  442.621845] Debug:  key: Shomper val: Test
+[  442.621846] Started insert_pair
+[  442.621846] 147
+[  442.621847] 158
+[  442.621848] Started insert_in_list
+[  442.621848] has keys
+[  442.621849] found the last element
+[  442.621850] allocated l->next
+[  442.621851] finished allocating, now get key and val
+[  442.621851] Finished insert_in_list
+[  442.621852] Finished insert_pair
+[  442.621853] Debug:  about to check value of rc line 255
+[  442.621853] Debug:  entered if rc line 257
+[  442.621855] Debug:  fp (f5033340) has key "Shomper" and val "Matthew"
+[  442.621856] Debug:  finished inserting; fp now points to ed5ba7c0
+[  442.621857] Debug:  new fp (ed5ba7c0) has key "Shomper" and val "Test"
+[  446.230270] Debug:  starting write on buf: Lively Richie
+[  446.230273] Debug:  kbuf: Lively Richie
+[  446.230274] Debug:  about to decide
+[  446.230275] Debug:  comparision: 1
+[  446.230276] Debug:  inserting Lively Richie
+[  446.230278] Debug:  key: Lively val: Richie
+[  446.230279] Started insert_pair
+[  446.230279] 147
+[  446.230280] 158
+[  446.230281] Started insert_in_list
+[  446.230281] no keys
+[  446.230282] finished allocating, now get key and val
+[  446.230283] Finished insert_in_list
+[  446.230284] Finished insert_pair
+[  446.230284] Debug:  about to check value of rc line 255
+[  446.230285] Debug:  entered if rc line 257
+[  446.230286] Debug:  fp (ed5ba7c0) has key "Shomper" and val "Test"
+[  446.230287] Debug:  finished inserting; fp now points to ed5ba740
+[  446.230288] Debug:  new fp (ed5ba740) has key "Lively" and val "Richie"
+[  448.445501] Debug:  starting write on buf: Lively rich
+[  448.445504] Debug:  kbuf: Lively rich
+[  448.445505] Debug:  about to decide
+[  448.445506] Debug:  comparision: 1
+[  448.445507] Debug:  inserting Lively rich
+[  448.445509] Debug:  key: Lively val: rich
+[  448.445510] Started insert_pair
+[  448.445510] 147
+[  448.445511] 158
+[  448.445512] Started insert_in_list
+[  448.445513] has keys
+[  448.445513] found the last element
+[  448.445514] allocated l->next
+[  448.445515] finished allocating, now get key and val
+[  448.445515] Finished insert_in_list
+[  448.445516] Finished insert_pair
+[  448.445517] Debug:  about to check value of rc line 255
+[  448.445517] Debug:  entered if rc line 257
+[  448.445519] Debug:  fp (ed5ba740) has key "Lively" and val "Richie"
+[  448.445520] Debug:  finished inserting; fp now points to ed5baa00
+[  448.445521] Debug:  new fp (ed5baa00) has key "Lively" and val "rich"
+[  451.645774] Debug:  starting write on buf: Lively Emma
+[  451.645777] Debug:  kbuf: Lively Emma
+[  451.645778] Debug:  about to decide
+[  451.645779] Debug:  comparision: 1
+[  451.645780] Debug:  inserting Lively Emma
+[  451.645782] Debug:  key: Lively val: Emma
+[  451.645783] Started insert_pair
+[  451.645783] 147
+[  451.645784] 158
+[  451.645785] Started insert_in_list
+[  451.645786] has keys
+[  451.645786] found the last element
+[  451.645787] allocated l->next
+[  451.645788] finished allocating, now get key and val
+[  451.645789] Finished insert_in_list
+[  451.645789] Finished insert_pair
+[  451.645790] Debug:  about to check value of rc line 255
+[  451.645791] Debug:  entered if rc line 257
+[  451.645792] Debug:  fp (ed5baa00) has key "Lively" and val "rich"
+[  451.645793] Debug:  finished inserting; fp now points to ed5bab40
+[  451.645794] Debug:  new fp (ed5bab40) has key "Lively" and val "Emma"
+[  455.189985] Debug:  starting write on buf: Lively Danny
+[  455.189988] Debug:  kbuf: Lively Danny
+[  455.189989] Debug:  about to decide
+[  455.189990] Debug:  comparision: 1
+[  455.189991] Debug:  inserting Lively Danny
+[  455.189993] Debug:  key: Lively val: Danny
+[  455.189994] Started insert_pair
+[  455.189994] 147
+[  455.189995] 158
+[  455.189996] Started insert_in_list
+[  455.189996] has keys
+[  455.189997] found the last element
+[  455.189998] allocated l->next
+[  455.189999] finished allocating, now get key and val
+[  455.190000] Finished insert_in_list
+[  455.190000] Finished insert_pair
+[  455.190001] Debug:  about to check value of rc line 255
+[  455.190001] Debug:  entered if rc line 257
+[  455.190003] Debug:  fp (ed5bab40) has key "Lively" and val "Emma"
+[  455.190004] Debug:  finished inserting; fp now points to ed5ba400
+[  455.190005] Debug:  new fp (ed5ba400) has key "Lively" and val "Danny"
+[  460.654634] Debug:  starting write on buf: Froberg Tim
+[  460.654637] Debug:  kbuf: Froberg Tim
+[  460.654639] Debug:  about to decide
+[  460.654640] Debug:  comparision: 1
+[  460.654641] Debug:  inserting Froberg Tim
+[  460.654642] Debug:  key: Froberg val: Tim
+[  460.654643] Started insert_pair
+[  460.654644] 147
+[  460.654644] 158
+[  460.654645] Started insert_in_list
+[  460.654646] no keys
+[  460.654647] finished allocating, now get key and val
+[  460.654648] Finished insert_in_list
+[  460.654648] Finished insert_pair
+[  460.654649] Debug:  about to check value of rc line 255
+[  460.654650] Debug:  entered if rc line 257
+[  460.654651] Debug:  fp (ed5ba400) has key "Lively" and val "Danny"
+[  460.654652] Debug:  finished inserting; fp now points to f5340e80
+[  460.654653] Debug:  new fp (f5340e80) has key "Froberg" and val "Tim"
+[  464.309507] Debug:  starting write on buf: Froberg Test
+[  464.309511] Debug:  kbuf: Froberg Test
+[  464.309512] Debug:  about to decide
+[  464.309513] Debug:  comparision: 1
+[  464.309514] Debug:  inserting Froberg Test
+[  464.309515] Debug:  key: Froberg val: Test
+[  464.309516] Started insert_pair
+[  464.309517] 147
+[  464.309518] 158
+[  464.309518] Started insert_in_list
+[  464.309519] has keys
+[  464.309520] found the last element
+[  464.309521] allocated l->next
+[  464.309521] finished allocating, now get key and val
+[  464.309522] Finished insert_in_list
+[  464.309523] Finished insert_pair
+[  464.309523] Debug:  about to check value of rc line 255
+[  464.309524] Debug:  entered if rc line 257
+[  464.309525] Debug:  fp (f5340e80) has key "Froberg" and val "Tim"
+[  464.309526] Debug:  finished inserting; fp now points to f5340d00
+[  464.309527] Debug:  new fp (f5340d00) has key "Froberg" and val "Test"
+[  469.110527] Debug:  starting write on buf: Blake Blake
+[  469.110530] Debug:  kbuf: Blake Blake
+[  469.110531] Debug:  about to decide
+[  469.110532] Debug:  comparision: 1
+[  469.110533] Debug:  inserting Blake Blake
+[  469.110535] Debug:  key: Blake val: Blake
+[  469.110536] Started insert_pair
+[  469.110536] 147
+[  469.110537] 158
+[  469.110538] Started insert_in_list
+[  469.110538] no keys
+[  469.110539] finished allocating, now get key and val
+[  469.110540] Finished insert_in_list
+[  469.110541] Finished insert_pair
+[  469.110541] Debug:  about to check value of rc line 255
+[  469.110542] Debug:  entered if rc line 257
+[  469.110543] Debug:  fp (f5340d00) has key "Froberg" and val "Test"
+[  469.110545] Debug:  finished inserting; fp now points to ed5baac0
+[  469.110545] Debug:  new fp (ed5baac0) has key "Blake" and val "Blake"
+[  477.535197] Debug:  starting write on buf: a a
+[  477.535200] Debug:  kbuf: a a
+[  477.535201] Debug:  about to decide
+[  477.535202] Debug:  comparision: 1
+[  477.535203] Debug:  inserting a a
+[  477.535205] Debug:  key: a val: a
+[  477.535206] Started insert_pair
+[  477.535206] 147
+[  477.535207] 158
+[  477.535208] Started insert_in_list
+[  477.535209] no keys
+[  477.535210] finished allocating, now get key and val
+[  477.535210] Finished insert_in_list
+[  477.535211] Finished insert_pair
+[  477.535212] Debug:  about to check value of rc line 255
+[  477.535212] Debug:  entered if rc line 257
+[  477.535214] Debug:  fp (ed5baac0) has key "Blake" and val "Blake"
+[  477.535215] Debug:  finished inserting; fp now points to f5340580
+[  477.535216] Debug:  new fp (f5340580) has key "a" and val "a"
+[  478.934581] Debug:  starting write on buf: b b
+[  478.934584] Debug:  kbuf: b b
+[  478.934585] Debug:  about to decide
+[  478.934586] Debug:  comparision: 1
+[  478.934587] Debug:  inserting b b
+[  478.934589] Debug:  key: b val: b
+[  478.934589] Started insert_pair
+[  478.934590] 147
+[  478.934591] 158
+[  478.934592] Started insert_in_list
+[  478.934592] no keys
+[  478.934593] finished allocating, now get key and val
+[  478.934594] Finished insert_in_list
+[  478.934595] Finished insert_pair
+[  478.934595] Debug:  about to check value of rc line 255
+[  478.934596] Debug:  entered if rc line 257
+[  478.934597] Debug:  fp (f5340580) has key "a" and val "a"
+[  478.934598] Debug:  finished inserting; fp now points to f5340140
+[  478.934599] Debug:  new fp (f5340140) has key "b" and val "b"
+[  480.294707] Debug:  starting write on buf: c c
+[  480.294710] Debug:  kbuf: c c
+[  480.294711] Debug:  about to decide
+[  480.294712] Debug:  comparision: 1
+[  480.294713] Debug:  inserting c c
+[  480.294715] Debug:  key: c val: c
+[  480.294716] Started insert_pair
+[  480.294716] 147
+[  480.294717] 158
+[  480.294718] Started insert_in_list
+[  480.294718] no keys
+[  480.294719] finished allocating, now get key and val
+[  480.294720] Finished insert_in_list
+[  480.294721] Finished insert_pair
+[  480.294721] Debug:  about to check value of rc line 255
+[  480.294722] Debug:  entered if rc line 257
+[  480.294723] Debug:  fp (f5340140) has key "b" and val "b"
+[  480.294724] Debug:  finished inserting; fp now points to f5340280
+[  480.294725] Debug:  new fp (f5340280) has key "c" and val "c"
+[  482.085422] Debug:  starting write on buf: d d
+[  482.085425] Debug:  kbuf: d d
+[  482.085426] Debug:  about to decide
+[  482.085427] Debug:  comparision: 1
+[  482.085428] Debug:  inserting d d
+[  482.085429] Debug:  key: d val: d
+[  482.085430] Started insert_pair
+[  482.085431] 147
+[  482.085432] 158
+[  482.085432] Started insert_in_list
+[  482.085433] no keys
+[  482.085434] finished allocating, now get key and val
+[  482.085435] Finished insert_in_list
+[  482.085435] Finished insert_pair
+[  482.085436] Debug:  about to check value of rc line 255
+[  482.085437] Debug:  entered if rc line 257
+[  482.085438] Debug:  fp (f5340280) has key "c" and val "c"
+[  482.085439] Debug:  finished inserting; fp now points to f54fb480
+[  482.085440] Debug:  new fp (f54fb480) has key "d" and val "d"
+[  483.437355] Debug:  starting write on buf: e e
+[  483.437358] Debug:  kbuf: e e
+[  483.437359] Debug:  about to decide
+[  483.437360] Debug:  comparision: 1
+[  483.437361] Debug:  inserting e e
+[  483.437363] Debug:  key: e val: e
+[  483.437364] Started insert_pair
+[  483.437364] 147
+[  483.437365] 158
+[  483.437366] Started insert_in_list
+[  483.437366] no keys
+[  483.437368] finished allocating, now get key and val
+[  483.437368] Finished insert_in_list
+[  483.437369] Finished insert_pair
+[  483.437369] Debug:  about to check value of rc line 255
+[  483.437370] Debug:  entered if rc line 257
+[  483.437371] Debug:  fp (f54fb480) has key "d" and val "d"
+[  483.437372] Debug:  finished inserting; fp now points to f54fb540
+[  483.437373] Debug:  new fp (f54fb540) has key "e" and val "e"
+[  485.789502] Debug:  starting write on buf: f f
+[  485.789505] Debug:  kbuf: f f
+[  485.789506] Debug:  about to decide
+[  485.789507] Debug:  comparision: 1
+[  485.789508] Debug:  inserting f f
+[  485.789510] Debug:  key: f val: f
+[  485.789511] Started insert_pair
+[  485.789511] 147
+[  485.789512] 158
+[  485.789513] Started insert_in_list
+[  485.789514] no keys
+[  485.789520] finished allocating, now get key and val
+[  485.789521] Finished insert_in_list
+[  485.789522] Finished insert_pair
+[  485.789522] Debug:  about to check value of rc line 255
+[  485.789523] Debug:  entered if rc line 257
+[  485.789524] Debug:  fp (f54fb540) has key "e" and val "e"
+[  485.789525] Debug:  finished inserting; fp now points to ef52c540
+[  485.789526] Debug:  new fp (ef52c540) has key "f" and val "f"
+[  539.469004] Debug:  starting write on buf: e e
+[  539.469007] Debug:  kbuf: e e
+[  539.469008] Debug:  about to decide
+[  539.469009] Debug:  comparision: 1
+[  539.469010] Debug:  inserting e e
+[  539.469012] Debug:  key: e val: e
+[  539.469012] Started insert_pair
+[  539.469013] 147
+[  539.469014] 158
+[  539.469015] Started insert_in_list
+[  539.469015] has keys
+[  539.469016] found the last element
+[  539.469017] allocated l->next
+[  539.469018] finished allocating, now get key and val
+[  539.469018] Finished insert_in_list
+[  539.469019] Finished insert_pair
+[  539.469020] Debug:  about to check value of rc line 255
+[  539.469020] Debug:  entered if rc line 257
+[  539.469022] Debug:  fp (ef52c540) has key "f" and val "f"
+[  539.469023] Debug:  finished inserting; fp now points to f54fb540
+[  539.469024] Debug:  new fp (f54fb540) has key "e" and val "e"
+[  540.677997] Debug:  starting write on buf: g g
+[  540.678000] Debug:  kbuf: g g
+[  540.678001] Debug:  about to decide
+[  540.678002] Debug:  comparision: 1
+[  540.678003] Debug:  inserting g g
+[  540.678004] Debug:  key: g val: g
+[  540.678005] Started insert_pair
+[  540.678006] 147
+[  540.678007] 158
+[  540.678008] Started insert_in_list
+[  540.678008] no keys
+[  540.678009] finished allocating, now get key and val
+[  540.678010] Finished insert_in_list
+[  540.678011] Finished insert_pair
+[  540.678011] Debug:  about to check value of rc line 255
+[  540.678012] Debug:  entered if rc line 257
+[  540.678013] Debug:  fp (f54fb540) has key "e" and val "e"
+[  540.678014] Debug:  finished inserting; fp now points to f50f0480
+[  540.678015] Debug:  new fp (f50f0480) has key "g" and val "g"
+[  544.276904] Debug:  starting write on buf: k k
+[  544.276908] Debug:  kbuf: k k
+[  544.276909] Debug:  about to decide
+[  544.276910] Debug:  comparision: 1
+[  544.276911] Debug:  inserting k k
+[  544.276912] Debug:  key: k val: k
+[  544.276913] Started insert_pair
+[  544.276914] 147
+[  544.276915] 158
+[  544.276915] Started insert_in_list
+[  544.276916] no keys
+[  544.276917] finished allocating, now get key and val
+[  544.276918] Finished insert_in_list
+[  544.276918] Finished insert_pair
+[  544.276919] Debug:  about to check value of rc line 255
+[  544.276920] Debug:  entered if rc line 257
+[  544.276921] Debug:  fp (f50f0480) has key "g" and val "g"
+[  544.276922] Debug:  finished inserting; fp now points to f50f0880
+[  544.276923] Debug:  new fp (f50f0880) has key "k" and val "k"
+[  547.508908] Debug:  starting write on buf: like this
+[  547.508911] Debug:  kbuf: like this
+[  547.508912] Debug:  about to decide
+[  547.508913] Debug:  comparision: 1
+[  547.508914] Debug:  inserting like this
+[  547.508916] Debug:  key: like val: this
+[  547.508917] Started insert_pair
+[  547.508917] 147
+[  547.508918] 158
+[  547.508919] Started insert_in_list
+[  547.508920] no keys
+[  547.508921] finished allocating, now get key and val
+[  547.508921] Finished insert_in_list
+[  547.508922] Finished insert_pair
+[  547.508923] Debug:  about to check value of rc line 255
+[  547.508923] Debug:  entered if rc line 257
+[  547.508924] Debug:  fp (f50f0880) has key "k" and val "k"
+[  547.508926] Debug:  finished inserting; fp now points to f50f0f80
+[  547.508927] Debug:  new fp (f50f0f80) has key "like" and val "this"
+[  549.924830] Debug:  starting write on buf: comment below
+[  549.924834] Debug:  kbuf: comment below
+[  549.924835] Debug:  about to decide
+[  549.924836] Debug:  comparision: 1
+[  549.924837] Debug:  inserting comment below
+[  549.924839] Debug:  key: comment val: below
+[  549.924839] Started insert_pair
+[  549.924840] 147
+[  549.924841] 158
+[  549.924842] Started insert_in_list
+[  549.924842] no keys
+[  549.924844] finished allocating, now get key and val
+[  549.924844] Finished insert_in_list
+[  549.924845] Finished insert_pair
+[  549.924846] Debug:  about to check value of rc line 255
+[  549.924846] Debug:  entered if rc line 257
+[  549.924848] Debug:  fp (f50f0f80) has key "like" and val "this"
+[  549.924849] Debug:  finished inserting; fp now points to f50f02c0
+[  549.924850] Debug:  new fp (f50f02c0) has key "comment" and val "below"
+[  554.485145] Debug:  starting write on buf: subscribe please
+[  554.485148] Debug:  kbuf: subscribe please
+[  554.485149] Debug:  about to decide
+[  554.485150] Debug:  comparision: 1
+[  554.485151] Debug:  inserting subscribe please
+[  554.485153] Debug:  key: subscribe val: please
+[  554.485154] Started insert_pair
+[  554.485154] 147
+[  554.485155] 158
+[  554.485156] Started insert_in_list
+[  554.485157] no keys
+[  554.485158] finished allocating, now get key and val
+[  554.485158] Finished insert_in_list
+[  554.485159] Finished insert_pair
+[  554.485160] Debug:  about to check value of rc line 255
+[  554.485160] Debug:  entered if rc line 257
+[  554.485162] Debug:  fp (f50f02c0) has key "comment" and val "below"
+[  554.485163] Debug:  finished inserting; fp now points to ef68b140
+[  554.485164] Debug:  new fp (ef68b140) has key "subscribe" and val "please"
+[  556.908856] Debug:  starting write on buf: watch more
+[  556.908859] Debug:  kbuf: watch more
+[  556.908860] Debug:  about to decide
+[  556.908861] Debug:  comparision: 1
+[  556.908862] Debug:  inserting watch more
+[  556.908863] Debug:  key: watch val: more
+[  556.908864] Started insert_pair
+[  556.908865] 147
+[  556.908866] 158
+[  556.908867] Started insert_in_list
+[  556.908868] no keys
+[  556.908869] finished allocating, now get key and val
+[  556.908870] Finished insert_in_list
+[  556.908870] Finished insert_pair
+[  556.908871] Debug:  about to check value of rc line 255
+[  556.908872] Debug:  entered if rc line 257
+[  556.908873] Debug:  fp (ef68b140) has key "subscribe" and val "please"
+[  556.908874] Debug:  finished inserting; fp now points to f50f0e40
+[  556.908875] Debug:  new fp (f50f0e40) has key "watch" and val "more"
+[  559.099763] Debug:  starting write on buf: videos now
+[  559.099766] Debug:  kbuf: videos now
+[  559.099767] Debug:  about to decide
+[  559.099768] Debug:  comparision: 1
+[  559.099769] Debug:  inserting videos now
+[  559.099771] Debug:  key: videos val: now
+[  559.099772] Started insert_pair
+[  559.099772] 147
+[  559.099773] 158
+[  559.099774] Started insert_in_list
+[  559.099775] no keys
+[  559.099776] finished allocating, now get key and val
+[  559.099776] Finished insert_in_list
+[  559.099777] Finished insert_pair
+[  559.099778] Debug:  about to check value of rc line 255
+[  559.099778] Debug:  entered if rc line 257
+[  559.099779] Debug:  fp (f50f0e40) has key "watch" and val "more"
+[  559.099781] Debug:  finished inserting; fp now points to f5033d80
+[  559.099782] Debug:  new fp (f5033d80) has key "videos" and val "now"
+[  561.190570] Debug:  starting write on buf: this is
+[  561.190573] Debug:  kbuf: this is
+[  561.190574] Debug:  about to decide
+[  561.190575] Debug:  comparision: 1
+[  561.190576] Debug:  inserting this is
+[  561.190578] Debug:  key: this val: is
+[  561.190579] Started insert_pair
+[  561.190579] 147
+[  561.190580] 158
+[  561.190581] Started insert_in_list
+[  561.190582] no keys
+[  561.190583] finished allocating, now get key and val
+[  561.190584] Finished insert_in_list
+[  561.190584] Finished insert_pair
+[  561.190585] Debug:  about to check value of rc line 255
+[  561.190585] Debug:  entered if rc line 257
+[  561.190587] Debug:  fp (f5033d80) has key "videos" and val "now"
+[  561.190588] Debug:  finished inserting; fp now points to f5033900
+[  561.190589] Debug:  new fp (f5033900) has key "this" and val "is"
+[  564.796843] Debug:  starting write on buf: a converstatio
+[  564.796846] Debug:  kbuf: a converstatio
+[  564.796847] Debug:  about to decide
+[  564.796849] Debug:  comparision: 1
+[  564.796849] Debug:  inserting a converstatio
+[  564.796851] Debug:  key: a val: converstatio
+[  564.796852] Started insert_pair
+[  564.796853] 147
+[  564.796853] 158
+[  564.796854] Started insert_in_list
+[  564.796855] has keys
+[  564.796883] *pdpt = 000000003533c001 *pde = 0000000000000000 
+[  564.796886] Oops: 0000 [#1] SMP 
+[  564.796888] Modules linked in: kvmod(OE) vmw_vsock_vmci_transport vsock input_leds joydev vmw_balloon serio_raw coretemp shpchp i2c_piix4 8250_fintek vmw_vmci mac_hid parport_pc ppdev lp parport autofs4 psmouse mptspi mptscsih mptbase vmwgfx pcnet32 mii ttm scsi_transport_spi drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm fjes pata_acpi
+[  564.796908] EIP: 0060:[<f92ea161>] EFLAGS: 00010206 CPU: 1
+[  564.796909] EIP is at insert_in_list+0xf1/0x100 [kvmod]
+[  564.796910] EAX: 00736e6f EBX: 00736e6f ECX: 00000008 EDX: 00000007
+[  564.796911] ESI: ed780d30 EDI: ed749e8c EBP: ed749e48 ESP: ed749e34
+[  564.796912]  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068
+[  564.796914] CR0: 80050033 CR2: 00736e97 CR3: 35768660 CR4: 000006f0
+[  564.797040] CR2: 0000000000736e97
+[  564.797042] ---[ end trace 90065524a524f78c ]---

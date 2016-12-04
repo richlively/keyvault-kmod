@@ -41,6 +41,8 @@ int kv_mod_major   = KV_MOD_MAJOR;
 int kv_mod_minor   = 0;
 int kv_mod_nr_devs = KV_MOD_NR_DEVS;
 
+char seek_key[80];
+
 module_param(kv_mod_major,   int, S_IRUGO);
 module_param(kv_mod_minor,   int, S_IRUGO);
 module_param(kv_mod_nr_devs, int, S_IRUGO);
@@ -72,11 +74,11 @@ int remove_data(struct kv_mod_dev *dev) {
  */
 int kv_mod_open(struct inode *inode, struct file *filp) {
     struct kv_mod_dev *dev;
-    /* we need the scull_dev object (dev), but the required prototpye
+    /* we need the kv_mod_dev object (dev), but the required prototpye
       for the open method is that it receives a pointer to an inode.
       now an inode contains a struct cdev (the field is called
       i_cdev) and we can use this field with the container_of macro
-      to obtain the scull_dev object (since scull_dev also contains
+      to obtain the kv_mod_dev object (since kv_mod_dev also contains
       a cdev object.
     */
     printk(KERN_WARNING "Debug:  -----\n");
@@ -87,6 +89,7 @@ int kv_mod_open(struct inode *inode, struct file *filp) {
 	 */
     filp->private_data = dev;
 
+    if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
     //here we need to decide if we set fp to null or the first
     //key needed
     int uid = get_user_id();
@@ -102,6 +105,7 @@ int kv_mod_open(struct inode *inode, struct file *filp) {
     }
     printk(KERN_WARNING "Debug:  finished open\n");
     printk(KERN_WARNING "Debug:  -----\n");
+    up(&dev->sem);
 	return 0;
 }
 
@@ -151,6 +155,15 @@ ssize_t kv_mod_read(struct file *filp, char __user *buf, size_t count,
     char kbuf[80];
     snprintf(kbuf, 80, "%s %s", key, val);
     printk(KERN_WARNING "Debug: kbuf: \"%s\"\n", kbuf);
+    bool found = false;
+    int i;
+    for (i = 0; i < 80; i++) {
+        if(kbuf[i]=='\0'){
+            found = true;
+        }
+    }
+    if (found) printk(KERN_WARNING "Debug:  kbuf is null terminated\n");
+    else printk(KERN_WARNING "Debug:  kbuf is NOT null terminated\n");
     // copy local buff to user buffer
     if (copy_to_user(buf, kbuf, strnlen(kbuf, 80))) {
 		retval = -EFAULT;
@@ -180,7 +193,7 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
     printk(KERN_WARNING "Debug:  starting write on buf: %s\n", buf);
     struct kv_mod_dev *dev = filp->private_data;
     ssize_t retval = -ENOMEM;
-   //get the semaphore; should this be above the first malloc?
+   //get the semaphore
     if (down_interruptible(&dev->sem)) return -ERESTARTSYS;
 
     /* this is where the actual "write" occurs, when we copy from the
@@ -252,7 +265,9 @@ ssize_t kv_mod_write(struct file *filp, const char __user *buf, size_t count,
         sscanf(kbuf, "%s %s", key, val);
         printk(KERN_WARNING "Debug:  key: %s val: %s\n", key, val);
         int rc = insert_pair(vault, uid, key, val);
+        printk(KERN_WARNING "Debug:  about to check value of rc line 255\n");
         if (rc /*vault->ukey_data.fp != NULL*/) {
+            printk(KERN_WARNING "Debug:  entered if rc line 257\n");
             if (vault->ukey_data[uid-1].fp == NULL) {
                 printk(KERN_WARNING "Debug:  fp is NULL\n");
             }
@@ -318,8 +333,42 @@ int get_user_id(void) {
 
 
 long kv_mod_ioctl(struct file *filp, unsigned int cmd, unsigned long arg) {
-    //TODO: stub
-    return 0;
+   	int err    = 0;
+	int retval = 0;    
+	/*
+	 * extract the type and number bitfields, and don't decode
+	 * wrong cmds: return ENOTTY (inappropriate ioctl) before access_ok()
+	 */
+	if (_IOC_TYPE(cmd) != KV_MOD_IOC_MAGIC) return -ENOTTY;
+	if (_IOC_NR(cmd)   >  KV_MOD_IOC_MAXNR) return -ENOTTY;
+
+	/*
+	 * the direction is a bitmask, and VERIFY_WRITE catches R/W
+	 * transfers. `Type' is user-oriented, while
+	 * access_ok is kernel-oriented, so the concept of "read" and
+	 * "write" is reversed
+	 */
+	if (_IOC_DIR(cmd) & _IOC_READ) {
+		err = !access_ok(VERIFY_WRITE, (void __user *)arg, _IOC_SIZE(cmd));
+	} else if (_IOC_DIR(cmd) & _IOC_WRITE) {
+		err = !access_ok(VERIFY_READ,  (void __user *)arg, _IOC_SIZE(cmd));
+	}
+
+	/* exit on error */
+	if (err) return -EFAULT;
+
+	/* parse the incoming command */
+	switch(cmd) {
+      case KV_MOD_IOCSQUANTUM:
+		  if (! capable (CAP_SYS_ADMIN))
+		    return -EPERM;
+		  retval = copy_from_user(seek_key, (char*) arg, 80);
+          break;
+      default:
+          return -ENOTTY;
+    }
+    
+    return retval;
 }
 
 /*
@@ -327,7 +376,11 @@ long kv_mod_ioctl(struct file *filp, unsigned int cmd, unsigned long arg) {
  */
 loff_t kv_mod_llseek(struct file *filp, loff_t off, int whence) {
     //TODO: stub
-    return 0;
+    struct kv_mod_dev *dev    = filp->private_data; 
+    int uid = get_user_id();
+    int *junk;
+    dev->data->ukey_data[uid-1].fp = find_key(dev->data, uid, seek_key, junk);
+    
 }
 
 /* this assignment is what "binds" the template file operations with those that
