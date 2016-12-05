@@ -96,7 +96,7 @@ long    kv_mod_ioctl (struct file *filp, unsigned int cmd, unsigned long arg);
  * X means "eXchange": switch G and S atomically
  * H means "sHift":    switch T and Q atomically
  */
-#define KV_MOD_IOCSQUANTUM _IOW (KV_MOD_IOC_MAGIC,   1, int)
+#define KV_MOD_IOCSKEY _IOW (KV_MOD_IOC_MAGIC,   1, char)
 #define KV_MOD_IOC_MAXNR 1
 
 #endif /* _KV_MOD_H_ */
