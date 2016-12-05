@@ -7,7 +7,7 @@
 #include "key_vault.h"
 
 /* the key vault:  once globally available, but now specified by a parameter */
-// static struct key_vault v;
+// static struct key_vault v; 
 
 /* init_vault:  initializes the key vault */
 int  init_vault (struct key_vault *v, int size) {
@@ -129,7 +129,7 @@ int num_vpairs (struct key_vault *v) {
 
 /* insert_pair: inserts key-value pair for given uid (one-indexed) into vault */
 int  insert_pair (struct key_vault *v, int uid, char *key, char *val) {
-
+    printk(KERN_WARNING "Started insert_pair\n");
    /* key-value pairs not kept for this uid, return FALSE */
    if (uid < 1 || uid > v->num_users) return FALSE;
 
@@ -137,19 +137,14 @@ int  insert_pair (struct key_vault *v, int uid, char *key, char *val) {
    struct kv_list_h *user = &v->ukey_data[uid-1];
 
    /* if first key for this user, then we need to allocate memory */
-	/* former test was "user->num_keys == 0"; however, in the context of
-      deletion, we could allocate for the first key, then delete it
-      dropping num_keys to zero, yet we do not need to re-allocate.
-    */
-   if (user->data == NULL) {
+   if (user->num_keys == 0) {
       user->data = kmalloc(MAX_KEY_USER*sizeof(struct kv_list*), GFP_KERNEL);
+		memset(user->data, 0, MAX_KEY_USER*sizeof(struct kv_list));
 
       /* if allocation fails, then return false */
       if (user->data == NULL) return FALSE;
-
-		memset(user->data, 0, MAX_KEY_USER*sizeof(struct kv_list*));
    }
-   
+    printk(KERN_WARNING "147\n");
    /* scan this user's keys for duplicates */
    struct kv_list **la = user->data;
    int i;
@@ -160,7 +155,7 @@ int  insert_pair (struct key_vault *v, int uid, char *key, char *val) {
 
    /* no more new keys permitted for this user, return FALSE */
    if (i == MAX_KEY_USER) return FALSE;
-
+    printk(KERN_WARNING "158\n");
    int rc = insert_in_list(&la[i], key, val);
 
    /* key was successfully inserted */
@@ -172,9 +167,9 @@ int  insert_pair (struct key_vault *v, int uid, char *key, char *val) {
 
    /* or not */
    } else {
-		;
+       // fprintf(stderr, "Error inserting key %s for user %d\n", key, uid);
    }
-
+    printk(KERN_WARNING "Finished insert_pair\n");
    return rc;
 }
 
@@ -187,7 +182,7 @@ void delete_pair (struct key_vault *v, int uid, char *key, char *val) {
 	/* key-value pair is not present */
 	if (l == NULL) return;
 
-	/* determine if the key is at the head of a list */
+	/* determine of the key is at the head of a list */
 	int i;
 	int num_keys = v->ukey_data[uid-1].num_keys;
 	for (i = 0; i < num_keys; i++) {
@@ -202,7 +197,6 @@ void delete_pair (struct key_vault *v, int uid, char *key, char *val) {
 		only_element_in_list = (int) (l->next == NULL);
 	}
 
-
 	/* point the head pointer to the next element (could be NULL) */
 	if (head_of_list) {
 		v->ukey_data[uid-1].data[i] = l->next;
@@ -215,7 +209,7 @@ void delete_pair (struct key_vault *v, int uid, char *key, char *val) {
 		/* to avoid holes among list pointers, compact the list head pointers */
 		int j;
 		for (j = i; j < num_keys-1; j++) {
-			la[j] = la[j+1];
+			la[i] = la[i+1];
 		}
 		v->ukey_data[uid-1].num_keys--;
 
@@ -224,9 +218,6 @@ void delete_pair (struct key_vault *v, int uid, char *key, char *val) {
 	}
 
 	delete_from_list(&l);
-
-	/* reduce the total number for this uid */
-	v->ukey_data[uid-1].total_key_val_pairs--;
 }
 
 /* retrieve_val:  retrieves value(s) for key for given uid (one-indexed) */
@@ -314,9 +305,6 @@ struct kv_list*  find_key_val (struct key_vault *v, int uid, char *key,
  */
 struct kv_list* next_key (struct key_vault *v, int uid, struct kv_list *l) {
 
-	/* return NULL, if l is NULL*/
-	if (l == NULL) return NULL;
-
 	/* return the next key in the current list, if present */
 	if (l->next != NULL) return l->next;
 
@@ -382,15 +370,14 @@ void free_list(struct kv_list *l) {
 
 /* insert_in_list:  inserts the key-value pair into list l */
 int  insert_in_list (struct kv_list **lp, char *key, char *val) {
-
+    printk(KERN_WARNING "Started insert_in_list\n");
 	struct kv_list *l;
 
 	/* no keys allocated to this list */
 	if (*lp == NULL) {
-
+    printk(KERN_WARNING "no keys\n");
 		/* so allocate one */
       *lp = kmalloc(sizeof(struct kv_list), GFP_KERNEL);
-		memset(*lp, 0, sizeof(struct kv_list));
 
       /* if kmalloc failed, return FALSE */
       if (*lp == NULL) return FALSE;
@@ -399,27 +386,27 @@ int  insert_in_list (struct kv_list **lp, char *key, char *val) {
 
 	/* this this already has keys */
 	} else {
-
+    printk(KERN_WARNING "has keys\n");
 		/* walk the list to the last element */
 		l = *lp;
 		while (l->next != NULL) l = l->next;
-
+    printk(KERN_WARNING "found the last element\n");
       /* add the new key-value pair */
       l->next = kmalloc(sizeof(struct kv_list), GFP_KERNEL);
 
       /* if kmalloc failed, return FALSE */
       if (l->next == NULL) return FALSE;
-
+    printk(KERN_WARNING "allocated l->next\n");
       /* set new elem's prev ptr, NULL-term next ptr, and adv l to new elem */
 		l->next->prev = l;
 		l->next->next = NULL;
       l = l->next;
    }
-
+   printk(KERN_WARNING "finished allocating, now get key and val\n");
    /* copy the key-value pair into the referenced list element */
    strncpy(l->kv.key, key, MAX_KEY_SIZE);
    strncpy(l->kv.val, val, MAX_VAL_SIZE);
-
+    printk(KERN_WARNING "Finished insert_in_list\n");
    return TRUE;
 }
 

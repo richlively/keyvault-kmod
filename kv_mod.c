@@ -154,7 +154,7 @@ ssize_t kv_mod_read(struct file *filp, char __user *buf, size_t count,
     // assemble pair into local buffer
     char kbuf[80];
     snprintf(kbuf, 80, "%s %s", key, val);
-    printk(KERN_WARNING "Debug: kbuf: \"%s\"\n", kbuf);
+    printk(KERN_WARNING "Debug: kbuf(%d): \"%s\"\n", strnlen(kbuf,80), kbuf);
     bool found = false;
     int i;
     for (i = 0; i < 80; i++) {
@@ -162,13 +162,22 @@ ssize_t kv_mod_read(struct file *filp, char __user *buf, size_t count,
             found = true;
         }
     }
+
     if (found) printk(KERN_WARNING "Debug:  kbuf is null terminated\n");
     else printk(KERN_WARNING "Debug:  kbuf is NOT null terminated\n");
+
+    /* the copy below originally had 80 where 79 appears and did not have
+       the '+1' part.  As a result, length of kbuf characters were copied
+       into buf, but this did not include the trailing NULL character, so
+       buf was not properly NULL terminated.  KAS
+     */
     // copy local buff to user buffer
-    if (copy_to_user(buf, kbuf, strnlen(kbuf, 80))) {
+    if (copy_to_user(buf, kbuf, strnlen(kbuf, 79)+1)) {
 		retval = -EFAULT;
 		goto out;
 	}
+    printk(KERN_WARNING "Debug: kbuf length %d, buf length %d\n", strnlen(kbuf,80), strnlen(buf, 80));
+
     // update the fp
     printk(KERN_WARNING "Debug: old fp: %p\n", curr);
     printk(KERN_WARNING "Debug: next kv_list: %p\n", curr->next);
@@ -181,7 +190,7 @@ ssize_t kv_mod_read(struct file *filp, char __user *buf, size_t count,
     }
     // set count to 1 (success) or 0 (faiure)
     retval = strlen(buf);
-    printk(KERN_WARNING "Debug: finished read\n");
+    printk(KERN_WARNING "Debug: finished read, returning %d bytes\n", retval);
     // release semephore
   out:
     up(&dev->sem);
@@ -384,6 +393,11 @@ loff_t kv_mod_llseek(struct file *filp, loff_t off, int whence) {
     struct kv_mod_dev *dev    = filp->private_data; 
     int uid = get_user_id();
     int *junk;
+
+    /* use find_key_val() rather than find_key() to perform the seek
+       in order to do the above, parse the data in seek_key using sscanf()
+       KAS
+     */
     dev->data->ukey_data[uid-1].fp = find_key(dev->data, uid, seek_key, junk);
     
 }
